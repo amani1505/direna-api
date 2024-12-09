@@ -7,6 +7,17 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "target": "ES2021",
+    "paths": {
+      "@config/*": ["src/config/*"],
+      "@modules/*": ["src/modules/*"],
+      "@interface/*": ["src/interface/*"],
+      "@enum/*": ["src/enum/*"],
+      "@guard/*": ["src/guard/*"],
+      "@lib/*": ["src/lib/*"],
+      "@utils/*": ["src/utils/*"],
+      "@middleware/*": ["src/middleware/*"],
+      "@assets/*": ["src/assets/*"]
+    },
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
