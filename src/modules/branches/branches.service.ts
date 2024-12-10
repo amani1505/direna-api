@@ -47,7 +47,6 @@ export class BranchesService {
 
       const queryBuilder = this._branchRepository.createQueryBuilder('branch');
 
-      // Validate relations
       const validRelations = getMetadataArgsStorage()
         .relations.filter((relation) => relation.target === Branch)
         .map((relation) => relation.propertyName);
@@ -73,15 +72,99 @@ export class BranchesService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} branch`;
+  async findOne(id: string, query: any): Promise<Branch> {
+    const { relations = [] } = query; // Extract relations from the query
+
+    if (!Array.isArray(relations)) {
+      throw new HttpException(
+        'Invalid input: relations must be an array',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const validRelations = getMetadataArgsStorage()
+      .relations.filter((relation) => relation.target === Branch)
+      .map((relation) => relation.propertyName);
+
+    relations.forEach((relation: string) => {
+      if (!validRelations.includes(relation)) {
+        throw new HttpException(
+          `Invalid relation: ${relation}`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    });
+
+    try {
+      const branch = await this._branchRepository.findOne({
+        where: { id },
+        relations,
+      });
+
+      if (!branch) {
+        throw new NotFoundException(`Branch not found`);
+      }
+
+      return branch;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+    }
   }
 
-  update(id: number, updateBranchDto: UpdateBranchDto) {
-    return `This action updates a #${id} branch`;
+  async update(id: string, updateBranchDto: UpdateBranchDto): Promise<Branch> {
+    try {
+      const branch = await this._branchRepository.findOne({
+        where: { id },
+      });
+
+      if (!branch) {
+        throw new NotFoundException(`category not found`);
+      }
+      this._branchRepository.merge(branch, updateBranchDto);
+      await this._branchRepository.save(branch);
+      return await this._branchRepository.findOne({ where: { id } });
+    } catch (error) {
+      throw new Error(`Failed to update product category: ${error.message}`);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} branch`;
+  async remove(id: string) {
+    try {
+      const branches = await this._branchRepository.find();
+      if (branches.length > 1) {
+        const branch = await this._branchRepository.findOne({
+          where: { id },
+        });
+
+        if (!branch) {
+          throw new NotFoundException('Branch not found');
+        }
+
+        // Delete the category, which will also delete all subcategories due to cascade
+        await this._branchRepository.remove(branch);
+
+        return {
+          message: `Successfully delete the branch at: ${branch.street}`,
+          status: 'success',
+        };
+      }
+      throw new HttpException(
+        {
+          message: 'The organization must have atleast one branch',
+          error: 'Internal Server Error',
+          status: 'error',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } catch (error) {
+      throw new HttpException(
+        {
+          message: 'Failed to delete the Branch',
+          error: error.message || 'Internal Server Error',
+          status: 'error',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

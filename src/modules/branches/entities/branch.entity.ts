@@ -1,7 +1,9 @@
+import { Member } from '@modules/member/entities/member.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -28,6 +30,9 @@ export class Branch {
 
   @Column()
   road: string;
+
+  @OneToMany(() => Member, (member) => member.branch)
+  members: Array<Member>;
 
   @CreateDateColumn()
   created_at: Date;

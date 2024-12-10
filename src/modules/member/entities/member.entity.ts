@@ -1,7 +1,9 @@
+import { Branch } from '@modules/branches/entities/branch.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -40,6 +42,9 @@ export class Member {
 
   @Column({ nullable: true })
   goal: string;
+
+  @ManyToOne(() => Branch, (branch) => branch.members)
+  branch: Branch;
 
   @CreateDateColumn()
   created_at: Date;
