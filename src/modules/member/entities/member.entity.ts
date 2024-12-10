@@ -14,19 +14,31 @@ export class Member {
   @Column()
   fullname: string;
 
+  @Column({ unique: true })
+  username: string;
+
   @Column({ unique: true }) // Ensure the email is unique
   email: string;
 
-  @Column({ type: 'int' })
+  @Column({ nullable: true })
+  phone: string;
+
+  @Column({ nullable: true })
+  address: string;
+
+  @Column({ nullable: true })
+  city: string;
+
+  @Column({ type: 'int', nullable: true })
   age: number;
 
-  @Column({ type: 'float' }) // For decimals
+  @Column({ type: 'float', nullable: true }) // For decimals
   weight: number;
 
-  @Column({ type: 'float' }) // For decimals
+  @Column({ type: 'float', nullable: true }) // For decimals
   height: number;
 
-  @Column()
+  @Column({ nullable: true })
   goal: string;
 
   @CreateDateColumn()

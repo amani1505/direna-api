@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .email-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .letter-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        .company-name {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .content {
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="email-header">
+            <div 
+                class="letter-avatar" 
+                style="background-color: {{backgroundColor}};"
+            >
+                {{letterAvatar}}
+            </div>
+            <div class="company-name">
+                {{icon}} {{companyName}}
+            </div>
+        </div>
+        <div class="content">
+            <h1>Welcome to {{companyName}}!</h1>
+            <p>Hello {{username}},</p>
+            <p>Your account has been created successfully. Here are your credentials:</p>
+            <p>Username: {{email}}<br>Password: {{password}}</p>
+            <p>Please change your password after logging in.</p>
+        </div>
+    </div>
+</body>
+</html>
