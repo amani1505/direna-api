@@ -11,6 +11,7 @@ import {
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
+import { PaginationOptions } from '@interface/pagination-option.interface';
 
 @Controller('service')
 export class ServicesController {
@@ -22,7 +23,7 @@ export class ServicesController {
   }
 
   @Get()
-  findAll(@Query() query: any) {
+  findAll(@Query() query: PaginationOptions) {
     return this._servicesService.findAll(query);
   }
 

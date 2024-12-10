@@ -11,6 +11,7 @@ import { Service } from './entities/service.entity';
 import { getMetadataArgsStorage, Repository } from 'typeorm';
 import { PaginationInterface } from '@interface/pagination.interface';
 import { applyFiltersAndPagination } from '@utils/filter';
+import { PaginationOptions } from '@interface/pagination-option.interface';
 
 @Injectable()
 export class ServicesService {
@@ -41,7 +42,9 @@ export class ServicesService {
     }
   }
 
-  async findAll(query: any): Promise<PaginationInterface<Service> | Service[]> {
+  async findAll(
+    query: PaginationOptions,
+  ): Promise<PaginationInterface<Service> | Service[]> {
     try {
       const { relations = [], sortBy = 'name', sortOrder = 'ASC' } = query;
 

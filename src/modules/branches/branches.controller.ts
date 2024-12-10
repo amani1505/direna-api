@@ -11,6 +11,7 @@ import {
 import { BranchesService } from './branches.service';
 import { CreateBranchDto } from './dto/create-branch.dto';
 import { UpdateBranchDto } from './dto/update-branch.dto';
+import { PaginationOptions } from '@interface/pagination-option.interface';
 
 @Controller('branch')
 export class BranchesController {
@@ -22,7 +23,7 @@ export class BranchesController {
   }
 
   @Get()
-  findAll(@Query() query: any) {
+  findAll(@Query() query: PaginationOptions) {
     return this._branchesService.findAll(query);
   }
 

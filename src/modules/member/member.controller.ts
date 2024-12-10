@@ -1,15 +1,17 @@
 import {
   Controller,
-  // Get,
+  Get,
   Post,
   Body,
-  // Patch,
-  // Param,
-  // Delete,
+  Query,
+  Patch,
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { CreateMemberDto } from './dto/create-member.dto';
-// import { UpdateMemberDto } from './dto/update-member.dto';
+import { PaginationOptions } from '@interface/pagination-option.interface';
+import { UpdateMemberDto } from './dto/update-member.dto';
 
 @Controller('member')
 export class MemberController {
@@ -20,23 +22,23 @@ export class MemberController {
     return this._memberService.create(createMemberDto);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.memberService.findAll();
-  // }
+  @Get()
+  findAll(@Query() query: PaginationOptions) {
+    return this._memberService.findAll(query);
+  }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.memberService.findOne(+id);
-  // }
+  @Get(':id')
+  findOne(@Param('id') id: string, @Query() query: any) {
+    return this._memberService.findOne(id, query);
+  }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto) {
-  //   return this.memberService.update(+id, updateMemberDto);
-  // }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto) {
+    return this._memberService.update(id, updateMemberDto);
+  }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.memberService.remove(+id);
-  // }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this._memberService.remove(id);
+  }
 }

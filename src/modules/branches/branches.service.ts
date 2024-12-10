@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getMetadataArgsStorage } from 'typeorm';
 import { applyFiltersAndPagination } from '@utils/filter';
 import { PaginationInterface } from '@interface/pagination.interface';
+import { PaginationOptions } from '@interface/pagination-option.interface';
 
 @Injectable()
 export class BranchesService {
@@ -53,7 +54,9 @@ export class BranchesService {
    * @returns A list of branches or paginated branches based on the query.
    * @throws {HttpException} If an error occurs during the retrieval process.
    */
-  async findAll(query: any): Promise<PaginationInterface<Branch> | Branch[]> {
+  async findAll(
+    query: PaginationOptions,
+  ): Promise<PaginationInterface<Branch> | Branch[]> {
     try {
       const { relations = [], sortBy = 'city', sortOrder = 'DESC' } = query;
 

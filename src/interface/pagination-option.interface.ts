@@ -6,4 +6,5 @@ export interface PaginationOptions {
   search?: string;
   filterBy?: string;
   withPagination?: boolean;
+  relations?: string[];
 }
