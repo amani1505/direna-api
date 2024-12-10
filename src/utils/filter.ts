@@ -1,17 +1,18 @@
+import { PaginationOptions } from '@interface/pagination-option.interface';
 import { NotFoundException } from '@nestjs/common';
-import { PaginationInterface } from 'src/interfaces/pagination.interface';
+import { PaginationInterface } from '@interface/pagination.interface';
 import { SelectQueryBuilder } from 'typeorm';
 
-interface PaginationOptions {
-  page?: number;
-  limit?: number;
-  sortBy?: string;
-  sortOrder?: 'ASC' | 'DESC';
-  search?: string;
-  filterBy?: string;
-  withPagination?: boolean;
-}
-
+/**
+ * Utility function to apply filters, sorting, and pagination to a TypeORM query builder.
+ * @template T Entity type for the query.
+ * @param queryBuilder TypeORM query builder to which filters and pagination will be applied.
+ * @param query PaginationOptions including filters, sorting, and pagination details.
+ * @param validRelations Array of valid relation names for validation (optional).
+ * @param entityAlias Alias for the entity in the query (default: 'entity').
+ * @returns Paginated results or all matching entities.
+ * @throws NotFoundException if no items are found matching the criteria.
+ */
 export async function applyFiltersAndPagination<T>(
   queryBuilder: SelectQueryBuilder<T>,
   query: PaginationOptions,
@@ -21,8 +22,8 @@ export async function applyFiltersAndPagination<T>(
   const {
     page = 1,
     limit = 10,
-    sortBy = 'city',
-    sortOrder = 'ASC',
+    sortBy, // Removed default value
+    sortOrder, // Removed default value
     search = '',
     filterBy = '',
     withPagination = false,
@@ -40,11 +41,17 @@ export async function applyFiltersAndPagination<T>(
     }
   }
 
-  // Apply sorting
-  queryBuilder.orderBy(
-    `${entityAlias}.${sortBy}`,
-    sortOrder.toUpperCase() === 'ASC' ? 'ASC' : 'DESC',
-  );
+  // Apply sorting dynamically
+  if (sortBy && sortOrder) {
+    queryBuilder.orderBy(
+      `${entityAlias}.${sortBy}`,
+      sortOrder.toUpperCase() === 'ASC' ? 'ASC' : 'DESC',
+    );
+  } else {
+    throw new NotFoundException(
+      'Sorting parameters (sortBy, sortOrder) are required',
+    );
+  }
 
   // Handle with/without pagination
   if (withPagination) {

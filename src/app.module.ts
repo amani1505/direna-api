@@ -10,6 +10,7 @@ import { ServicesModule } from './modules/services/services.module';
 import { BranchesModule } from './modules/branches/branches.module';
 import { BranchSeeder } from './seeding/branch.seeder';
 import { UserModule } from './modules/user/user.module';
+import { ServiceSeeder } from './seeding/service.seeder';
 // import { MailModule } from '@config/mail.module';
 
 @Module({
@@ -31,8 +32,12 @@ import { UserModule } from './modules/user/user.module';
   providers: [AppService],
 })
 export class AppModule implements OnModuleInit {
-  constructor(private readonly _branchSeeder: BranchSeeder) {}
+  constructor(
+    private readonly _branchSeeder: BranchSeeder,
+    private readonly _serviceSeeder: ServiceSeeder,
+  ) {}
   onModuleInit() {
     this._branchSeeder.seed();
+    this._serviceSeeder.seed();
   }
 }

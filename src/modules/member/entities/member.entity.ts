@@ -1,8 +1,11 @@
 import { Branch } from '@modules/branches/entities/branch.entity';
+import { Service } from '@modules/services/entities/service.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -45,6 +48,12 @@ export class Member {
 
   @ManyToOne(() => Branch, (branch) => branch.members)
   branch: Branch;
+
+  @ManyToMany(() => Service, (service) => service.members, {
+    cascade: true,
+  })
+  @JoinTable({ name: 'member_has_services' })
+  services: Array<Member>;
 
   @CreateDateColumn()
   created_at: Date;
