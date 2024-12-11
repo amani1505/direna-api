@@ -1,14 +1,23 @@
-import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEmail,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateMemberDto {
   @IsString()
   fullname: string;
 
-  @IsString()
-  username: string;
-
   @IsEmail()
   email: string;
+
+  @IsString()
+  branchId?: string;
+
+  @IsArray()
+  serviceIds: Array<string>;
 
   @IsOptional()
   @IsString()

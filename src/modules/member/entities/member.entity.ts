@@ -19,9 +19,6 @@ export class Member {
   @Column()
   fullname: string;
 
-  @Column({ unique: true })
-  username: string;
-
   @Column({ unique: true }) // Ensure the email is unique
   email: string;
 
@@ -46,6 +43,9 @@ export class Member {
   @Column({ nullable: true })
   goal: string;
 
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean;
+
   @ManyToOne(() => Branch, (branch) => branch.members)
   branch: Branch;
 
@@ -53,7 +53,7 @@ export class Member {
     cascade: true,
   })
   @JoinTable({ name: 'member_has_services' })
-  services: Array<Member>;
+  services: Array<Service>;
 
   @CreateDateColumn()
   created_at: Date;
