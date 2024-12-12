@@ -1,4 +1,5 @@
 import { RoleEnum } from '@enum/role.enum';
+
 import {
   Column,
   CreateDateColumn,

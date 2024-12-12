@@ -12,6 +12,7 @@ import { BranchSeeder } from './seeding/branch.seeder';
 import { UserModule } from './modules/user/user.module';
 import { ServiceSeeder } from './seeding/service.seeder';
 // import { MailModule } from '@config/mail.module';
+import { FileModule } from './modules/file/file.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ServiceSeeder } from './seeding/service.seeder';
     ServicesModule,
     BranchesModule,
     UserModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

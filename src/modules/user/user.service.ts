@@ -12,12 +12,16 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { MailService } from '@modules/mail/mail.service';
+import { Files } from '@modules/file/entities/file.entity';
+import { readFileSync, unlinkSync, writeFileSync } from 'fs';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private _userRepository: Repository<User>,
+    @InjectRepository(Files)
+    private _filesRepository: Repository<Files>,
     private _mailService: MailService,
   ) {}
   async create(createUserDto: CreateUserDto) {
@@ -131,7 +135,68 @@ export class UserService {
     return updateUserData;
   }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} user`;
-  // }
+  async uploadUserAvatar(
+    userId: string,
+    file: Express.Multer.File,
+  ): Promise<any> {
+    try {
+      const user = await this._userRepository.findOne({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      user.avatar = file.path;
+      await this._userRepository.save(user);
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...userData } = user;
+
+      return userData;
+    } catch (error) {
+      throw new HttpException(
+        `Failed to upload avatar: ${error.message}`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async updateUserAvatar(
+    userId: string,
+    file: Express.Multer.File,
+  ): Promise<any> {
+    try {
+      const user = await this._userRepository.findOne({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      const oldPath = user.avatar;
+      unlinkSync(oldPath);
+      const newPath = file.path;
+      const fileContent = readFileSync(file.path);
+
+      writeFileSync(newPath, fileContent);
+
+      user.avatar = newPath;
+      await this._userRepository.save(user);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...userData } = user;
+
+      return userData;
+    } catch (error) {
+      throw new HttpException(
+        `Failed to update avatar: ${error.message}`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} user`;
+  }
 }

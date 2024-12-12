@@ -8,10 +8,11 @@ import { User } from '@modules/user/entities/user.entity';
 import { MailModule } from '@config/mail.module';
 import { Branch } from '@modules/branches/entities/branch.entity';
 import { Service } from '@modules/services/entities/service.entity';
+import { Files } from '@modules/file/entities/file.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Member, User, Branch, Service]),
+    TypeOrmModule.forFeature([Member, User, Branch, Service, Files]),
     MailModule,
   ],
   controllers: [MemberController],
