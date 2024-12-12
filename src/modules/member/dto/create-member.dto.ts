@@ -1,6 +1,8 @@
+import { GenderEnum } from '@enum/gender.enum';
 import {
   IsArray,
   IsEmail,
+  IsEnum,
   IsNumber,
   IsOptional,
   IsString,
@@ -18,6 +20,9 @@ export class CreateMemberDto {
 
   @IsArray()
   serviceIds: Array<string>;
+
+  @IsEnum(GenderEnum)
+  gender: GenderEnum;
 
   @IsOptional()
   @IsString()

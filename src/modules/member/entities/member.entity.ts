@@ -1,3 +1,4 @@
+import { GenderEnum } from '@enum/gender.enum';
 import { Branch } from '@modules/branches/entities/branch.entity';
 import { Service } from '@modules/services/entities/service.entity';
 import {
@@ -30,6 +31,9 @@ export class Member {
 
   @Column({ nullable: true })
   city: string;
+
+  @Column({ type: 'enum', enum: GenderEnum })
+  gender: GenderEnum;
 
   @Column({ type: 'int', nullable: true })
   age: number;
