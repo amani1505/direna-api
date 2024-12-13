@@ -12,16 +12,16 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { MailService } from '@modules/mail/mail.service';
-import { Files } from '@modules/file/entities/file.entity';
 import { readFileSync, unlinkSync, writeFileSync } from 'fs';
+import { Member } from '@modules/member/entities/member.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private _userRepository: Repository<User>,
-    @InjectRepository(Files)
-    private _filesRepository: Repository<Files>,
+    @InjectRepository(Member)
+    private _memberRepository: Repository<Member>,
     private _mailService: MailService,
   ) {}
   async create(createUserDto: CreateUserDto) {
@@ -196,7 +196,42 @@ export class UserService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    try {
+      const user = await this._userRepository.findOne({
+        where: { id },
+      });
+
+      const member = await this._memberRepository.findOne({
+        where: { email: user.email },
+      });
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      if (!member) {
+        throw new NotFoundException('user email does not match the user email');
+      }
+
+      member.isActive = false;
+
+      await this._memberRepository.save(member);
+
+      await this._userRepository.remove(user);
+
+      return {
+        message: `Successfully deleted your account`,
+        status: 'success',
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          message: 'Failed to delete your account',
+          error: error.message || 'Internal Server Error',
+          status: 'error',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

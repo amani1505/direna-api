@@ -7,7 +7,7 @@ import {
   Param,
   UseInterceptors,
   UploadedFile,
-  // Delete,
+  Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -78,8 +78,8 @@ export class UserController {
     return this._userService.update(id, updateUserDto);
   }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.userService.remove(+id);
-  // }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this._userService.remove(id);
+  }
 }
