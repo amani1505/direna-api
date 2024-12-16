@@ -224,14 +224,15 @@ export class MemberService {
       });
 
       if (!member) {
-        throw new NotFoundException('Member not found');
+        throw new NotFoundException(`Member not found  ${member.fullname}`);
       }
 
-      if (!user) {
-        throw new NotFoundException(`user not found`);
+      if (user) {
+       await this._userRepository.remove(user);
+        await this._memberRepository.remove(member);
       }
 
-      await this._userRepository.remove(user);
+    
       await this._memberRepository.remove(member);
 
       return {
