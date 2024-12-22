@@ -40,13 +40,13 @@ export class CreateMemberDto {
   @IsNumber()
   age?: number;
 
-  @IsOptional()
-  @IsNumber()
-  weight?: number;
+
+  @IsString()
+  weight: string;
 
   @IsOptional()
-  @IsNumber()
-  height?: number;
+  @IsString()
+  height?: string;
 
   @IsOptional()
   @IsString()

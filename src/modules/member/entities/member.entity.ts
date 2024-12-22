@@ -38,11 +38,11 @@ export class Member {
   @Column({ type: 'int', nullable: true })
   age: number;
 
-  @Column({ type: 'float', nullable: true }) // For decimals
-  weight: number;
+  @Column() // For decimals
+  weight: string;
 
-  @Column({ type: 'float', nullable: true }) // For decimals
-  height: number;
+  @Column({ nullable: true }) // For decimals
+  height: string;
 
   @Column({ nullable: true })
   goal: string;
