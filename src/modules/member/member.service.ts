@@ -10,13 +10,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Member } from './entities/member.entity';
 import { getMetadataArgsStorage, In, Repository } from 'typeorm';
 import { UserService } from '@modules/user/user.service';
-import { RoleEnum } from '@enum/role.enum';
 import { PaginationInterface } from '@interface/pagination.interface';
 import { applyFiltersAndPagination } from '@utils/filter';
 import { PaginationOptions } from '@interface/pagination-option.interface';
 import { User } from '@modules/user/entities/user.entity';
 import { Branch } from '@modules/branches/entities/branch.entity';
 import { Service } from '@modules/services/entities/service.entity';
+import { Role } from '@modules/roles/entities/role.entity';
 
 @Injectable()
 export class MemberService {
@@ -30,6 +30,9 @@ export class MemberService {
 
     @InjectRepository(Service)
     private _serviceRepository: Repository<Service>,
+
+    @InjectRepository(Role)
+    private _roleRepository: Repository<Role>,
 
     private _userService: UserService,
   ) {}
@@ -46,6 +49,11 @@ export class MemberService {
         where: { id: branchId },
       });
 
+      const role = await this._roleRepository.findOne({
+        where: { name: 'user' },
+      });
+
+      console.log('Role', role);
       if (email) {
         throw new NotFoundException(`The Email is  already exist`);
       }
@@ -75,7 +83,7 @@ export class MemberService {
       await this._userService.create({
         fullname: createdMember.fullname,
         email: createMemberDto.email,
-        role: RoleEnum.USER,
+        roleId: role.id,
       });
       const memberCreated = await this._memberRepository.save(createdMember);
 
@@ -219,27 +227,33 @@ export class MemberService {
       const member = await this._memberRepository.findOne({
         where: { id },
       });
+
+      if (!member) {
+        throw new NotFoundException(`Member with ID ${id} not found`);
+      }
+
+      // Find associated user
       const user = await this._userRepository.findOne({
         where: { email: member.email },
       });
 
-      if (!member) {
-        throw new NotFoundException(`Member not found  ${member.fullname}`);
-      }
-
+      // If user exists, remove it first (due to foreign key constraints)
       if (user) {
-       await this._userRepository.remove(user);
-        await this._memberRepository.remove(member);
+        await this._userRepository.delete(user.id); // Using delete instead of remove
       }
 
-    
-      await this._memberRepository.remove(member);
+      // Remove the member
+      await this._memberRepository.delete(member.id); // Using delete instead of remove
 
       return {
-        message: `Successfully delete the member: ${member.fullname}`,
+        message: `Successfully deleted the member: ${member.fullname}`,
         status: 'success',
       };
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error; // Re-throw NotFoundException to maintain the correct status code
+      }
+
       throw new HttpException(
         {
           message: 'Failed to delete the member',

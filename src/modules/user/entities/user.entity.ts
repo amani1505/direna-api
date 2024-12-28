@@ -1,9 +1,11 @@
-import { RoleEnum } from '@enum/role.enum';
+import { Role } from '@modules/roles/entities/role.entity';
 
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -25,8 +27,15 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ type: 'enum', enum: RoleEnum, default: RoleEnum.USER })
-  role: RoleEnum;
+  // @Column({ type: 'enum', enum: RoleEnum, default: RoleEnum.USER })
+  // role: RoleEnum;
+
+  @ManyToOne(() => Role, (role) => role.users)
+  @JoinColumn({ name: 'roleId' })
+  role: Role;
+
+  @Column({ nullable: true })
+  roleId: string;
 
   @CreateDateColumn()
   created_at: Date;

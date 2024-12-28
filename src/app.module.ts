@@ -13,6 +13,7 @@ import { UserModule } from './modules/user/user.module';
 import { ServiceSeeder } from './seeding/service.seeder';
 // import { MailModule } from '@config/mail.module';
 import { FileModule } from './modules/file/file.module';
+import { RolesModule } from './modules/roles/roles.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { FileModule } from './modules/file/file.module';
     BranchesModule,
     UserModule,
     FileModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
