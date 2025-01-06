@@ -1,4 +1,5 @@
 import { Member } from '@modules/member/entities/member.entity';
+import { Staff } from '@modules/staffs/entities/staff.entity';
 import {
   Column,
   CreateDateColumn,
@@ -33,6 +34,9 @@ export class Branch {
 
   @OneToMany(() => Member, (member) => member.branch)
   members: Array<Member>;
+
+  @OneToMany(() => Staff, (staff) => staff.branch)
+  staffs: Array<Staff>;
 
   @CreateDateColumn()
   created_at: Date;

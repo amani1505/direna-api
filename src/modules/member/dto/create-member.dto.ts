@@ -40,7 +40,6 @@ export class CreateMemberDto {
   @IsNumber()
   age?: number;
 
-
   @IsString()
   weight: string;
 

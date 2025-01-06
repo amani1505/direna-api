@@ -14,6 +14,7 @@ import { ServiceSeeder } from './seeding/service.seeder';
 // import { MailModule } from '@config/mail.module';
 import { FileModule } from './modules/file/file.module';
 import { RolesModule } from './modules/roles/roles.module';
+import { StaffsModule } from './modules/staffs/staffs.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { RolesModule } from './modules/roles/roles.module';
     UserModule,
     FileModule,
     RolesModule,
+    StaffsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

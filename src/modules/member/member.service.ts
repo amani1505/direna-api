@@ -53,7 +53,6 @@ export class MemberService {
         where: { name: 'user' },
       });
 
-      console.log('Role', role);
       if (email) {
         throw new NotFoundException(`The Email is  already exist`);
       }
@@ -182,7 +181,6 @@ export class MemberService {
         where: { email: member.email },
       });
 
-      console.log('Update DTO', updateMemberDto);
       if (!member) {
         throw new NotFoundException(`member not found`);
       }
@@ -229,7 +227,7 @@ export class MemberService {
       });
 
       if (!member) {
-        throw new NotFoundException(`Member with ID ${id} not found`);
+        throw new NotFoundException(`Member not found`);
       }
 
       // Find associated user

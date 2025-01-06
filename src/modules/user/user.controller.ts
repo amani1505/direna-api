@@ -79,7 +79,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this._userService.remove(id);
+  remove(@Param('id') id: string, @Body() userType: string) {
+    return this._userService.remove(id, userType);
   }
 }
