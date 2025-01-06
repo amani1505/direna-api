@@ -6,9 +6,10 @@ import { User } from './entities/user.entity';
 import { MailModule } from '@config/mail.module';
 import { Files } from '../file/entities/file.entity';
 import { Member } from '@modules/member/entities/member.entity';
+import { Staff } from '@modules/staffs/entities/staff.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Files, Member]), MailModule],
+  imports: [TypeOrmModule.forFeature([User, Files, Member, Staff]), MailModule],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService],
