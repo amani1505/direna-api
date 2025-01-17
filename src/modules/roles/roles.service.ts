@@ -9,7 +9,7 @@ import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './entities/role.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 
 @Injectable()
 export class RolesService {
@@ -41,7 +41,23 @@ export class RolesService {
   async findAll(): Promise<Role[]> {
     return await this._roleRepository.find();
   }
+  async findAllExceptUser(): Promise<Role[]> {
+    try {
+      // const roles = await this._roleRepository.find({
+      //   where: {
+      //     name: 'user',
+      //   },
+      // });
 
+      return await this._roleRepository.find({
+        where: { name: Not('user') },
+      });
+    } catch (error) {
+      throw new NotFoundException(
+        `No roles found except user : ${error.message}`,
+      );
+    }
+  }
   async findOne(id: string): Promise<Role> {
     try {
       const role = await this._roleRepository.findOne({ where: { id } });

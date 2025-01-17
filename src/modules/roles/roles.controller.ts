@@ -24,7 +24,10 @@ export class RolesController {
   findAll() {
     return this._rolesService.findAll();
   }
-
+  @Get('except-user')
+  findAllExceptUser() {
+    return this._rolesService.findAllExceptUser();
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this._rolesService.findOne(id);
