@@ -15,6 +15,7 @@ import { ServiceSeeder } from './seeding/service.seeder';
 import { FileModule } from './modules/file/file.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { StaffsModule } from './modules/staffs/staffs.module';
+import { ClassesModule } from './modules/classes/classes.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { StaffsModule } from './modules/staffs/staffs.module';
     FileModule,
     RolesModule,
     StaffsModule,
+    ClassesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
