@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Admin",
+    "description": "Has full access to all dashboard features, including user and role management, reports, and system settings."
+  },
+  {
+    "name": "Manager",
+    "description": "Manages gym operations, including memberships, schedules, and trainer assignments."
+  },
+  {
+    "name": "Trainer",
+    "description": "Responsible for conducting training sessions and managing client progress."
+  },
+  {
+    "name": "Receptionist",
+    "description": "Handles front desk operations, membership registrations, and member inquiries."
+  },
+  {
+    "name": "User",
+    "description": "Regular gym member with access to workout schedules, personal progress, and bookings."
+  },
+  {
+    "name": "Cleaner",
+    "description": "Responsible for maintaining cleanliness and hygiene in the gym premises."
+  }
+]

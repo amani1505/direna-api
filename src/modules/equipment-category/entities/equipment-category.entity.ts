@@ -3,24 +3,21 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'file' })
-export class Files {
+@Entity({ name: 'equipment_category' })
+export class EquipmentCategory {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
-  file_name: string;
+  category_name: string;
 
-  @Column()
-  file_path: string;
-
-  @ManyToOne(() => Equipment, (equipment) => equipment.files)
-  equipment: Equipment;
+  @ManyToMany(() => Equipment, (equipment) => equipment.categories)
+  equipmemnts: Array<Equipment>;
 
   @CreateDateColumn()
   created_at: Date;

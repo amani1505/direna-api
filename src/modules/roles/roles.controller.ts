@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { PaginationOptions } from '@interface/pagination-option.interface';
 
 @Controller('roles')
 export class RolesController {
@@ -21,16 +23,16 @@ export class RolesController {
   }
 
   @Get()
-  findAll() {
-    return this._rolesService.findAll();
+  findAll(@Query() query: PaginationOptions) {
+    return this._rolesService.findAll(query);
   }
   @Get('except-user')
   findAllExceptUser() {
     return this._rolesService.findAllExceptUser();
   }
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this._rolesService.findOne(id);
+  findOne(@Param('id') id: string, @Query() query: any) {
+    return this._rolesService.findOne(id, query);
   }
 
   @Patch(':id')

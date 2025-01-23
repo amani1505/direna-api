@@ -16,7 +16,8 @@
       "@lib/*": ["src/lib/*"],
       "@utils/*": ["src/utils/*"],
       "@middleware/*": ["src/middleware/*"],
-      "@assets/*": ["src/assets/*"]
+      "@assets/*": ["src/assets/*"],
+      "@seeder/*": ["src/seeding/*"]
     },
     "sourceMap": true,
     "outDir": "./dist",
