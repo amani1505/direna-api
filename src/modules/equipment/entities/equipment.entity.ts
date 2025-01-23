@@ -1,6 +1,7 @@
 import { EquipmentCategory } from '@modules/equipment-category/entities/equipment-category.entity';
 import { Files } from '@modules/file/entities/file.entity';
 import {
+  Check,
   Column,
   CreateDateColumn,
   Entity,
@@ -11,7 +12,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'equipmemnt' })
+@Entity({ name: 'equipment' })
 export class Equipment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -34,13 +35,21 @@ export class Equipment {
   @Column()
   purchase_date: Date;
 
+  @Check('price > -1')
+  @Column({ type: 'real', unsigned: true })
+  price: number;
+
+  @Check('quantity > -1')
+  @Column({ type: 'smallint', unsigned: true })
+  quantity: number;
+
   @OneToMany(() => Files, (file) => file.equipment)
   files: Array<Files>;
 
   @ManyToMany(() => EquipmentCategory, (category) => category.equipmemnts, {
     cascade: true,
   })
-  @JoinTable({ name: 'equipmemnt_has_category' })
+  @JoinTable({ name: 'equipment_has_category' })
   categories: Array<EquipmentCategory>;
 
   @CreateDateColumn()
