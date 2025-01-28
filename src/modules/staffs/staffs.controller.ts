@@ -26,6 +26,10 @@ export class StaffsController {
   findAll(@Query() query: PaginationOptions) {
     return this._staffsService.findAll(query);
   }
+  @Get('trainers')
+  findAllTrainers() {
+    return this._staffsService.findAllTrainers();
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string, @Query() query: any) {

@@ -8,7 +8,7 @@ import { CreateStaffDto } from './dto/create-staff.dto';
 import { UpdateStaffDto } from './dto/update-staff.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Staff } from './entities/staff.entity';
-import { getMetadataArgsStorage, Repository } from 'typeorm';
+import { getMetadataArgsStorage, In, Repository } from 'typeorm';
 import { User } from '@modules/user/entities/user.entity';
 import { Branch } from '@modules/branches/entities/branch.entity';
 import { Role } from '@modules/roles/entities/role.entity';
@@ -116,6 +116,36 @@ export class StaffsService {
       );
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+    }
+  }
+
+  async findAllTrainers(): Promise<Staff[]> {
+    try {
+      const trainers = await this._userRepository.find({
+        where: {
+          role: {
+            name: 'Trainer',
+          },
+        },
+      });
+
+      const trainerEmails = trainers.map((trainer) => trainer.email);
+
+      if (trainerEmails.length === 0) {
+        return [];
+      }
+
+      // Step 3: Fetch staffs whose emails match the trainers' emails
+      return await this._staffRepository.find({
+        where: {
+          email: In(trainerEmails), // Use the "In" operator to match multiple emails
+        },
+      });
+    } catch (error) {
+      throw new HttpException(
+        `Failed to retrieve staffs with trainer emails: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
