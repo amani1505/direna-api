@@ -20,8 +20,8 @@ export class CreateClassDto {
   day: string;
 
   @IsString()
-  @IsNotEmpty()
-  color: string;
+  @IsOptional()
+  color?: string;
 
   @IsInt()
   @IsNotEmpty()

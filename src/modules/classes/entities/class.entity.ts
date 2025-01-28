@@ -23,7 +23,7 @@ export class Classes {
   @Column({ type: 'varchar', length: 50 })
   day: string;
 
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 50, default: '#ff4836' })
   color: string;
 
   @Column({ type: 'int' })
@@ -42,8 +42,8 @@ export class Classes {
   instructors: Array<Staff>;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }
