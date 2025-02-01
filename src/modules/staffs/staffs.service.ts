@@ -149,7 +149,7 @@ export class StaffsService {
     }
   }
 
-  async findOne(id: string, query: any): Promise<Staff> {
+  async findOne(id: string, query: any): Promise<any> {
     const { relations = [] } = query; // Extract relations from the query
 
     if (!Array.isArray(relations)) {
@@ -178,11 +178,18 @@ export class StaffsService {
         relations,
       });
 
+      const user = await this._userRepository.findOne({
+        where: {
+          email: staff.email,
+        },
+        relations: ['role'],
+      });
+
       if (!staff) {
         throw new NotFoundException(`Staff not found`);
       }
 
-      return staff;
+      return { ...staff, role: user.role };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
     }
@@ -214,6 +221,9 @@ export class StaffsService {
 
       if (updateStaffDto.email) {
         user.email = updateStaffDto.email;
+      }
+      if (updateStaffDto.role) {
+        user.roleId = updateStaffDto.role;
       }
 
       staff.branch = branch;
