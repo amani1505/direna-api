@@ -274,6 +274,7 @@ export class EquipmentService {
     try {
       const equipment = await this._equipmentRepository.findOne({
         where: { id },
+        relations: ['files'],
       });
 
       if (!equipment) {

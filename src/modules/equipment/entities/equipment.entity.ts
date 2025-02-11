@@ -31,6 +31,12 @@ export class Equipment {
 
   @Column()
   serial_number: string;
+  
+  @Column()
+  used_for: string;
+  
+    @Column()
+  status: string;
 
   @Column()
   purchase_date: Date;
@@ -53,8 +59,8 @@ export class Equipment {
   categories: Array<EquipmentCategory>;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }

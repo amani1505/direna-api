@@ -25,14 +25,14 @@ export class EquipmentController {
 
   @Post()
   @UseInterceptors(
-    FilesInterceptor('equipment', 3, {
+    FilesInterceptor('equipmentImages', 4, {
       storage: diskStorage({
         destination: './uploads/equipments',
         filename: (req, file, callback) => {
           const uniqueSuffix =
             Date.now() + '-' + Math.round(Math.random() * 1e9);
           const ext = extname(file.originalname);
-          callback(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+          callback(null, `equipment-${uniqueSuffix}${ext}`);
         },
       }),
     }),

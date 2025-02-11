@@ -8,6 +8,7 @@ import {
   IsString,
   Length,
   Max,
+  IsOptional
 } from 'class-validator';
 import { ParseNumber, ParsePrice, SanitizeHTML, Trim } from '@lib/transformer';
 export class CreateEquipmentDto {
@@ -23,9 +24,8 @@ export class CreateEquipmentDto {
   @IsString()
   description: string;
 
-  @IsNotEmpty()
-  @IsBoolean()
-  isPublished: boolean;
+  @IsOptional()
+  isPublished?: boolean;
 
   @IsNotEmpty()
   @IsString()
@@ -34,13 +34,21 @@ export class CreateEquipmentDto {
   @IsNotEmpty()
   @IsString()
   serial_number: string;
+  
+  @IsNotEmpty()
+  @IsString()
+  status:string;
+  
+    @IsNotEmpty()
+  @IsString()
+  used_for:string;
 
   @IsNotEmpty()
   @IsString()
   purchase_date: string;
 
   @ParsePrice()
-  @Max(999999)
+  @Max(9999999999)
   @IsPositive()
   @IsNumber()
   @ParseNumber()

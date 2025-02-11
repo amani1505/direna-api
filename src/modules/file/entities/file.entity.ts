@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'file' })
+@Entity({ name: 'files' })
 export class Files {
   @PrimaryGeneratedColumn('uuid')
   id: string;
