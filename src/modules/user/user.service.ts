@@ -29,7 +29,7 @@ export class UserService {
 
     private _mailService: MailService,
   ) {}
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto, type?: string) {
     try {
       const existingUser = await this._userRepository.findOne({
         where: { email: createUserDto.email },
@@ -53,6 +53,32 @@ export class UserService {
         roleId,
       });
       createdUser.password = hashedPassword;
+      if (type === 'member') {
+        const member = await this._memberRepository.findOne({
+          where: { id: createUserDto.memberId },
+        });
+
+        if (!member) {
+          throw new NotFoundException(`Member not found!`);
+        }
+
+        createdUser.memberId = member.id; // Assign memberId to the User entity
+      } else if (type === 'staff') {
+        const staff = await this._staffRepository.findOne({
+          where: { id: createUserDto.staffId },
+        });
+
+        if (!staff) {
+          throw new NotFoundException(`Staff with found!`);
+        }
+
+        createdUser.staffId = staff.id; // Assign staffId to the User entity
+      } else {
+        throw new HttpException(
+          `Invalid user type: ${type}. Must be either 'member' or 'staff'.`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
 
       await this._mailService.sendMail(
         createUserDto.email, // Assuming username is the email

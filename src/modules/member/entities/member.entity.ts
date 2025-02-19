@@ -1,6 +1,7 @@
 import { GenderEnum } from '@enum/gender.enum';
 import { Branch } from '@modules/branches/entities/branch.entity';
 import { Service } from '@modules/services/entities/service.entity';
+import { User } from '@modules/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,6 +9,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -58,6 +60,9 @@ export class Member {
   })
   @JoinTable({ name: 'member_has_services' })
   services: Array<Service>;
+
+  @OneToOne(() => User, (user) => user.member) // Bidirectional relationship
+  user: User;
 
   @CreateDateColumn()
   created_at: Date;

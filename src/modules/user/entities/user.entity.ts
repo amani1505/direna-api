@@ -1,4 +1,7 @@
+import { Blog } from '@modules/blog/entities/blog.entity';
+import { Member } from '@modules/member/entities/member.entity';
 import { Role } from '@modules/roles/entities/role.entity';
+import { Staff } from '@modules/staffs/entities/staff.entity';
 
 import {
   Column,
@@ -6,6 +9,8 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -27,8 +32,8 @@ export class User {
   @Column()
   password: string;
 
-  // @Column({ type: 'enum', enum: RoleEnum, default: RoleEnum.USER })
-  // role: RoleEnum;
+  @OneToMany(() => Blog, (blog) => blog.author)
+  blog: Array<Blog>;
 
   @ManyToOne(() => Role, (role) => role.users)
   @JoinColumn({ name: 'roleId' })
@@ -36,6 +41,19 @@ export class User {
 
   @Column({ nullable: true })
   roleId: string;
+
+  @OneToOne(() => Member, (member) => member.user) // One-to-One with Member
+  @JoinColumn({ name: 'memberId' })
+  member: Member;
+  @Column({ nullable: true })
+  memberId: string;
+
+  @OneToOne(() => Staff, (staff) => staff.user) // One-to-One with Staff
+  @JoinColumn({ name: 'staffId' })
+  staff: Staff;
+
+  @Column({ nullable: true })
+  staffId: string;
 
   @CreateDateColumn()
   created_at: Date;

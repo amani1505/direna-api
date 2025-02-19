@@ -16,4 +16,12 @@ export class CreateUserDto {
 
   @IsString()
   roleId: string;
+
+  @IsString()
+  @IsOptional()
+  memberId?: string;
+
+  @IsString()
+  @IsOptional()
+  staffId?: string;
 }

@@ -70,13 +70,16 @@ export class StaffsService {
         branch,
       });
 
-      await this._userService.create({
-        fullname: createdStaff.fullname,
-        email: createStaffDto.email,
-        roleId: role,
-      });
       const staffCreated = await this._staffRepository.save(createdStaff);
-
+      await this._userService.create(
+        {
+          fullname: createdStaff.fullname,
+          email: createStaffDto.email,
+          roleId: role,
+          staffId: staffCreated.id,
+        },
+        'staff',
+      );
       return staffCreated;
     } catch (error) {
       throw new HttpException(

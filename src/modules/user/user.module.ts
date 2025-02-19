@@ -7,9 +7,13 @@ import { MailModule } from '@config/mail.module';
 import { Files } from '../file/entities/file.entity';
 import { Member } from '@modules/member/entities/member.entity';
 import { Staff } from '@modules/staffs/entities/staff.entity';
+import { Blog } from '@modules/blog/entities/blog.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Files, Member, Staff]), MailModule],
+  imports: [
+    TypeOrmModule.forFeature([User, Files, Member, Staff, Blog]),
+    MailModule,
+  ],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService],

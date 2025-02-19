@@ -1,6 +1,7 @@
 import { GenderEnum } from '@enum/gender.enum';
 import { Branch } from '@modules/branches/entities/branch.entity';
 import { Classes } from '@modules/classes/entities/class.entity';
+import { User } from '@modules/user/entities/user.entity';
 
 import {
   Entity,
@@ -10,6 +11,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToMany,
+  OneToOne,
 } from 'typeorm';
 
 @Entity({ name: 'staff' })
@@ -43,6 +45,9 @@ export class Staff {
 
   @ManyToMany(() => Classes, (classes) => classes.instructors)
   classes: Array<Classes>;
+
+  @OneToOne(() => User, (user) => user.staff) // Bidirectional relationship
+  user: User;
 
   @CreateDateColumn()
   created_at: Date;

@@ -19,6 +19,7 @@ import { BranchSeeder } from '@seeder/branch.seeder';
 import { RolesSeeder } from '@seeder/role.seeder';
 import { ServiceSeeder } from '@seeder/service.seeder';
 import { EquipmentCategorySeeder } from '@seeder/equipment-category.seeders';
+import { BlogModule } from './modules/blog/blog.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { EquipmentCategorySeeder } from '@seeder/equipment-category.seeders';
     ClassesModule,
     EquipmentModule,
     EquipmentCategoryModule,
+    BlogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -79,12 +79,17 @@ export class MemberService {
         services, // Assign services directly
       });
 
-      await this._userService.create({
-        fullname: createdMember.fullname,
-        email: createMemberDto.email,
-        roleId: role.id,
-      });
       const memberCreated = await this._memberRepository.save(createdMember);
+
+      await this._userService.create(
+        {
+          fullname: createdMember.fullname,
+          email: createMemberDto.email,
+          roleId: role.id,
+          memberId: memberCreated.id,
+        },
+        'member',
+      );
 
       return memberCreated;
     } catch (error) {
