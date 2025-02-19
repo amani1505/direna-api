@@ -20,22 +20,25 @@ export class Equipment {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ type: 'text' })
   description: string;
 
   @Column({ default: false })
   isPublished: boolean;
 
   @Column()
+  short_description: string;
+
+  @Column()
   model: string;
 
   @Column()
   serial_number: string;
-  
+
   @Column()
   used_for: string;
-  
-    @Column()
+
+  @Column()
   status: string;
 
   @Column()

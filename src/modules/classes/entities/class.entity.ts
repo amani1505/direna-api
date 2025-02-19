@@ -34,6 +34,8 @@ export class Classes {
 
   @Column({ type: 'time' })
   endTime: string;
+  @Column()
+  image: string;
 
   @ManyToMany(() => Staff, (staff) => staff.classes, {
     cascade: true,

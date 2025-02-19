@@ -16,6 +16,9 @@ export class EquipmentCategory {
   @Column()
   category_name: string;
 
+  @Column()
+  image: string;
+
   @ManyToMany(() => Equipment, (equipment) => equipment.categories)
   equipmemnts: Array<Equipment>;
 

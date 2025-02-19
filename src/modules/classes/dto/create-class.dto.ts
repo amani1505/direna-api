@@ -37,4 +37,6 @@ export class CreateClassDto {
 
   @IsArray()
   staffIds: Array<string>;
+
+  image: string;
 }

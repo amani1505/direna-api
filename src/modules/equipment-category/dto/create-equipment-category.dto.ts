@@ -4,4 +4,5 @@ export class CreateEquipmentCategoryDto {
   @IsNotEmpty()
   @IsString()
   category_name: string;
+  image: string;
 }

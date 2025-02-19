@@ -13,6 +13,7 @@ import { Staff } from '@modules/staffs/entities/staff.entity';
 import { PaginationOptions } from '@interface/pagination-option.interface';
 import { PaginationInterface } from '@interface/pagination.interface';
 import { applyFiltersAndPagination } from '@utils/filter';
+import { readFileSync, unlinkSync, writeFileSync } from 'fs';
 
 @Injectable()
 export class ClassesService {
@@ -151,6 +152,28 @@ export class ClassesService {
     }
   }
 
+  async updateClassFile(id: string, file: Express.Multer.File): Promise<any> {
+    try {
+      const session = await this._classesRepository.findOne({
+        where: { id },
+      });
+
+      if (!session) {
+        throw new NotFoundException(`Class not found`);
+      }
+      const oldPath = session.image;
+      const newPath = file.path;
+      const fileContent = readFileSync(file.path);
+      writeFileSync(newPath, fileContent);
+
+      session.image = newPath;
+      unlinkSync(oldPath);
+      return await this._classesRepository.save(session);
+    } catch (error) {
+      throw new Error(`Failed to update an image: ${error.message}`);
+    }
+  }
+
   async remove(id: string) {
     try {
       const session = await this._classesRepository.findOne({
@@ -161,7 +184,15 @@ export class ClassesService {
         throw new NotFoundException(`Class not found`);
       }
 
-      // Remove the member
+      if (session.image) {
+        try {
+          unlinkSync(session.image); // Delete the image file from storage
+        } catch (error) {
+          throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
+      }
+
+      // Remove the class entity from the database
       await this._classesRepository.delete(session.id);
 
       return {

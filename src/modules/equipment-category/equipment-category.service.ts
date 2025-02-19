@@ -13,6 +13,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationOptions } from '@interface/pagination-option.interface';
 import { PaginationInterface } from '@interface/pagination.interface';
 import { applyFiltersAndPagination } from '@utils/filter';
+import { readFileSync, unlinkSync, writeFileSync } from 'fs';
 
 @Injectable()
 export class EquipmentCategoryService {
@@ -39,6 +40,9 @@ export class EquipmentCategoryService {
       const equipmentCategory = this._equipmentCategoryRepository.create(
         createEquipmentCategoryDto,
       );
+
+      equipmentCategory.image = createEquipmentCategoryDto.image;
+
       return await this._equipmentCategoryRepository.save(equipmentCategory);
     } catch (error) {
       throw new HttpException(
@@ -159,6 +163,31 @@ export class EquipmentCategoryService {
     }
   }
 
+  async updateCategoryFile(
+    id: string,
+    file: Express.Multer.File,
+  ): Promise<any> {
+    try {
+      const category = await this._equipmentCategoryRepository.findOne({
+        where: { id },
+      });
+
+      if (!category) {
+        throw new NotFoundException(`category not found`);
+      }
+      const oldPath = category.image;
+      const newPath = file.path;
+      const fileContent = readFileSync(file.path);
+      writeFileSync(newPath, fileContent);
+
+      category.image = newPath;
+      unlinkSync(oldPath);
+      return await this._equipmentCategoryRepository.save(category);
+    } catch (error) {
+      throw new Error(`Failed to update an image: ${error.message}`);
+    }
+  }
+
   async remove(id: string): Promise<any> {
     try {
       const category = await this._equipmentCategoryRepository.findOne({
@@ -166,16 +195,29 @@ export class EquipmentCategoryService {
       });
 
       if (!category) {
-        throw new NotFoundException('category not found');
+        throw new NotFoundException('Category not found');
       }
 
+      if (category.image) {
+        try {
+          unlinkSync(category.image);
+        } catch (error) {
+          throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
+      }
+
+      // Remove the category entity from the database
       await this._equipmentCategoryRepository.remove(category);
 
       return {
-        message: `Successfully delete the category at: ${category.category_name}`,
+        message: `Successfully deleted the category: ${category.category_name}`,
         status: 'success',
       };
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
       throw new HttpException(
         {
           message: 'Failed to delete the category',
