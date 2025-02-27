@@ -22,14 +22,13 @@ export class EquipmentCategorySeeder {
       });
 
       if (!existingCategory) {
-        // Create a new variant if it doesn't exist
         const newCategory = new EquipmentCategory();
         newCategory.category_name = category.category_name;
+        newCategory.image = category.image;
 
         await this._equipmentCategoryRepository.save(newCategory);
       } else {
-        // Optionally, you could update the existing variant's values if needed
-
+        existingCategory.image = category.image;
         await this._equipmentCategoryRepository.save(existingCategory);
       }
     }

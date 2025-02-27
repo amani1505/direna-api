@@ -1,29 +1,38 @@
 [
   {
-    "category_name": "Cardio Equipment"
+    "category_name": "Cardio Equipment",
+    "image": "uploads/categories/cardio.webp"
   },
   {
-    "category_name": "Strength Training Equipment"
+    "category_name": "Strength Training Equipment",
+    "image": "uploads/categories/strength.jpg"
   },
   {
-    "category_name": "Yoga and Pilates"
+    "category_name": "Yoga and Pilates",
+    "image": "uploads/categories/yoga.jpg"
   },
   {
-    "category_name": "Free Weights"
+    "category_name": "Free Weights",
+    "image": "uploads/categories/free.webp"
   },
   {
-    "category_name": "Resistance Training"
+    "category_name": "Resistance Training",
+    "image": "uploads/categories/Resistance.jpg"
   },
   {
-    "category_name": "Gym Flooring"
+    "category_name": "Gym Flooring",
+    "image": "uploads/categories/floor.jpg"
   },
   {
-    "category_name": "Cycling Equipment"
+    "category_name": "Cycling Equipment",
+    "image": "uploads/categories/cyclic.webp"
   },
   {
-    "category_name": "Water Sports Equipment"
+    "category_name": "Water Sports Equipment",
+    "image": "uploads/categories/water.jpg"
   },
   {
-    "category_name": "Climbing Gear"
+    "category_name": "Climbing Gear",
+    "image": "uploads/categories/climbing.jpg"
   }
 ]

@@ -25,7 +25,7 @@ export class EquipmentController {
 
   @Post()
   @UseInterceptors(
-    FilesInterceptor('equipmentImages', 4, {
+    FilesInterceptor('equipmentImages', 10, {
       storage: diskStorage({
         destination: './uploads/equipments',
         filename: (req, file, callback) => {
