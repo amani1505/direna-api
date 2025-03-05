@@ -46,9 +46,9 @@ export class EquipmentController {
 
   @Post('file/:id')
   @UseInterceptors(
-    FileInterceptor('update', {
+    FileInterceptor('equipmentImages', {
       storage: diskStorage({
-        destination: './uploads/products',
+        destination: './uploads/equipments',
         filename: (req, file, callback) => {
           const uniqueSuffix =
             Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -86,9 +86,9 @@ export class EquipmentController {
 
   @Patch('file/:id')
   @UseInterceptors(
-    FileInterceptor('update', {
+    FileInterceptor('equipmentImages', {
       storage: diskStorage({
-        destination: './uploads/products',
+        destination: './uploads/equipments',
         filename: (req, file, callback) => {
           const uniqueSuffix =
             Date.now() + '-' + Math.round(Math.random() * 1e9);

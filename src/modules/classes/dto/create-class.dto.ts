@@ -4,7 +4,10 @@ import {
   IsOptional,
   IsInt,
   IsArray,
+  IsNumber,
+  IsPositive,
 } from 'class-validator';
+import { ParseNumber } from '@lib/transformer';
 
 export class CreateClassDto {
   @IsString()
@@ -24,7 +27,9 @@ export class CreateClassDto {
   color?: string;
 
   @IsInt()
-  @IsNotEmpty()
+  @IsPositive()
+  @IsNumber()
+  @ParseNumber()
   capacity: number;
 
   @IsString()
