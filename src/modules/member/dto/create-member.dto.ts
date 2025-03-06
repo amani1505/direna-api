@@ -50,4 +50,7 @@ export class CreateMemberDto {
   @IsOptional()
   @IsString()
   goal?: string;
+
+  @IsOptional()
+  isActive?: boolean;
 }
