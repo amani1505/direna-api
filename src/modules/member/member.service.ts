@@ -211,8 +211,12 @@ export class MemberService {
         user.email = updateMemberDto.email;
       }
 
-      member.branch = branch;
-      member.services = services;
+      if (updateMemberDto.branchId) {
+        member.branch = branch;
+      }
+      if (updateMemberDto.serviceIds) {
+        member.services = services;
+      }
 
       this._memberRepository.merge(member, updateMemberDto);
 
