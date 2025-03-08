@@ -6,6 +6,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "typeRoots": ["./node_modules/@types", "./types"],
     "target": "ES2021",
     "paths": {
       "@config/*": ["src/config/*"],
@@ -17,7 +18,8 @@
       "@utils/*": ["src/utils/*"],
       "@middleware/*": ["src/middleware/*"],
       "@assets/*": ["src/assets/*"],
-      "@seeder/*": ["src/seeding/*"]
+      "@seeder/*": ["src/seeding/*"],
+      "@types/*": ["src/types/*"]
     },
     "sourceMap": true,
     "outDir": "./dist",
@@ -29,5 +31,6 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  "include": ["src", "types"]
 }

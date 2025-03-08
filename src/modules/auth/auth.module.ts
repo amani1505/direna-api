@@ -16,6 +16,8 @@ import { PassportModule } from '@nestjs/passport';
 import { config } from 'dotenv';
 import { Role } from '@modules/roles/entities/role.entity';
 import { RolesService } from '@modules/roles/roles.service';
+import { SessionSerializer } from './serializer/session.serializer';
+
 config();
 @Module({
   imports: [
@@ -25,7 +27,7 @@ config();
         expiresIn: '3600s',
       },
     }),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    PassportModule.register({ defaultStrategy: 'jwt', session: true }),
     TypeOrmModule.forFeature([User, Member, Staff, Role]),
     MailModule,
   ],
@@ -36,8 +38,9 @@ config();
     LocalStrategy,
     RefreshJwtStrategy,
     RolesService,
+    SessionSerializer,
   ],
   controllers: [AuthController],
-  exports: [JwtModule, PassportModule],
+  exports: [JwtModule, PassportModule, AuthService],
 })
 export class AuthModule {}

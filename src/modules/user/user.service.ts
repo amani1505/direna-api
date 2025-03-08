@@ -116,9 +116,21 @@ export class UserService {
   //   return `This action returns all user`;
   // }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} user`;
-  // }
+  async findOne(id: string) {
+    try {
+      const user = await this._userRepository.findOne({
+        where: { id },
+        relations: ['role'],
+      });
+      if (!user) {
+        throw new NotFoundException(`user not found`);
+      }
+
+      return user;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+    }
+  }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User | any> {
     const user = await this._userRepository.findOne({ where: { id } });
@@ -260,6 +272,65 @@ export class UserService {
       return user;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+    }
+  }
+
+  async getProfile(userId: string): Promise<any> {
+    // Fetch the user without loading relationships initially
+    const user = await this._userRepository.findOne({
+      where: { id: userId },
+      relations: ['role'], // Always load the role
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Check if the user is a member or staff and load the relevant relationship
+    if (user.memberId) {
+      // Load the member relationship if the user is a member
+      const member = await this._memberRepository.findOne({
+        where: { id: user.memberId },
+      });
+
+      if (!member) {
+        throw new NotFoundException('Member not found');
+      }
+
+      // Exclude staffId and staff from the response
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { staffId, staff, ...userData } = user;
+
+      return {
+        ...userData, // Spread user data without staffId and staff
+        member, // Include the member details
+      };
+    } else if (user.staffId) {
+      // Load the staff relationship if the user is a staff
+      const staff = await this._staffRepository.findOne({
+        where: { id: user.staffId },
+      });
+
+      if (!staff) {
+        throw new NotFoundException('Staff not found');
+      }
+
+      // Exclude memberId and member from the response
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { memberId, member, ...userData } = user;
+
+      return {
+        ...userData, // Spread user data without memberId and member
+        staff, // Include the staff details
+      };
+    } else {
+      // If the user is neither a member nor a staff, return the user without relationships
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { memberId, staffId, member, staff, ...userData } = user;
+
+      return {
+        ...userData, // Spread user data without memberId, staffId, member, and staff
+      };
     }
   }
 

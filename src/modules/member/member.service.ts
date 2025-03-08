@@ -144,7 +144,7 @@ export class MemberService {
   }
 
   async findOne(id: string, query: any): Promise<Member> {
-    const { relations = [] } = query; // Extract relations from the query
+    const { relations = ['user'] } = query; // Extract relations from the query
 
     if (!Array.isArray(relations)) {
       throw new HttpException(

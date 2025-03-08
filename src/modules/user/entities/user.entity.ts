@@ -2,6 +2,7 @@ import { Blog } from '@modules/blog/entities/blog.entity';
 import { Member } from '@modules/member/entities/member.entity';
 import { Role } from '@modules/roles/entities/role.entity';
 import { Staff } from '@modules/staffs/entities/staff.entity';
+import { Exclude } from 'class-transformer';
 
 import {
   Column,
@@ -30,6 +31,7 @@ export class User {
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @OneToMany(() => Blog, (blog) => blog.author)
@@ -46,6 +48,7 @@ export class User {
   @JoinColumn({ name: 'memberId' })
   member: Member;
   @Column({ nullable: true })
+  @Exclude()
   memberId: string;
 
   @OneToOne(() => Staff, (staff) => staff.user) // One-to-One with Staff
@@ -53,6 +56,7 @@ export class User {
   staff: Staff;
 
   @Column({ nullable: true })
+  @Exclude()
   staffId: string;
 
   @CreateDateColumn()

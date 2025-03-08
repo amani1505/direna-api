@@ -9,6 +9,8 @@ import {
   UploadedFile,
   Delete,
   UseGuards,
+  Get,
+  Request,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -70,10 +72,13 @@ export class UserController {
     return this._userService.updateUserAvatar(id, file);
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.userService.findOne(+id);
-  // }
+  @UseGuards(JwtAuthGuard)
+  // @Roles('Super Admin')
+  @Get('me')
+  findOne(@Request() req) {
+    const userId = req.session.userId;
+    return this._userService.getProfile(userId);
+  }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')

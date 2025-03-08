@@ -12,7 +12,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=${NODE_ENV}
       - APP_PORT=${APP_PORT} # Pass the PORT variable to the container
       - DB_TYPE=${DB_TYPE}
       - DB_HOST=${DB_HOST}

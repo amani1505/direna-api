@@ -1,4 +1,9 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  OnModuleInit,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './config/database.module';
@@ -26,6 +31,7 @@ import { RoleActionsModule } from './modules/role-actions/role-actions.module';
 import { RoleModulesSeeder } from '@seeder/role-module.seeder';
 import { RoleActionsSeeder } from '@seeder/role-action.seedet';
 import { UserSeeder } from '@seeder/user.seeder';
+import { TokenBlacklistMiddleware } from '@modules/auth/middleware/token-blacklist.middleware';
 
 @Module({
   imports: [
@@ -55,7 +61,7 @@ import { UserSeeder } from '@seeder/user.seeder';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements OnModuleInit {
+export class AppModule implements OnModuleInit, NestModule {
   constructor(
     private readonly _branchSeeder: BranchSeeder,
     private readonly _serviceSeeder: ServiceSeeder,
@@ -65,6 +71,10 @@ export class AppModule implements OnModuleInit {
     private readonly _userSeeder: UserSeeder,
     private readonly _equipmentCategorySeeder: EquipmentCategorySeeder,
   ) {}
+
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(TokenBlacklistMiddleware).forRoutes('*'); // Apply to all routes
+  }
   onModuleInit() {
     this._branchSeeder.seed();
     this._serviceSeeder.seed();
