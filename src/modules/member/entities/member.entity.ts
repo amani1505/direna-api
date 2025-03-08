@@ -25,6 +25,9 @@ export class Member {
   @Column({ unique: true }) // Ensure the email is unique
   email: string;
 
+  @Column({ unique: true })
+  member_number: string;
+
   @Column({ nullable: true })
   phone: string;
 

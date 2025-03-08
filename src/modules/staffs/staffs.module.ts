@@ -10,11 +10,13 @@ import { Role } from '@modules/roles/entities/role.entity';
 import { MailModule } from '@config/mail.module';
 import { Member } from '@modules/member/entities/member.entity';
 import { Classes } from '@modules/classes/entities/class.entity';
+import { UtilsModule } from '@utils/utils.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Staff, User, Branch, Role, Member, Classes]),
     MailModule,
+    UtilsModule,
   ],
   controllers: [StaffsController],
   providers: [StaffsService, UserService],

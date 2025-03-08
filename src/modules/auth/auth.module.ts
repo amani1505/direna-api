@@ -11,16 +11,22 @@ import { User } from '@modules/user/entities/user.entity';
 import { Member } from '@modules/member/entities/member.entity';
 import { Staff } from '@modules/staffs/entities/staff.entity';
 import { MailModule } from '@config/mail.module';
+import { PassportModule } from '@nestjs/passport';
 
+import { config } from 'dotenv';
+import { Role } from '@modules/roles/entities/role.entity';
+import { RolesService } from '@modules/roles/roles.service';
+config();
 @Module({
   imports: [
     JwtModule.register({
-      secret: `${process.env.JWT_SECRET}`,
+      secret: process.env.JWT_SECRET,
       signOptions: {
         expiresIn: '3600s',
       },
     }),
-    TypeOrmModule.forFeature([User, Member, Staff]),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    TypeOrmModule.forFeature([User, Member, Staff, Role]),
     MailModule,
   ],
   providers: [
@@ -29,7 +35,9 @@ import { MailModule } from '@config/mail.module';
     JwtStrategy,
     LocalStrategy,
     RefreshJwtStrategy,
+    RolesService,
   ],
   controllers: [AuthController],
+  exports: [JwtModule, PassportModule],
 })
 export class AuthModule {}

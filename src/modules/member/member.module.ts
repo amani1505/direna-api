@@ -11,6 +11,7 @@ import { Service } from '@modules/services/entities/service.entity';
 import { Files } from '@modules/file/entities/file.entity';
 import { Role } from '@modules/roles/entities/role.entity';
 import { Staff } from '@modules/staffs/entities/staff.entity';
+import { UtilsModule } from '@utils/utils.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { Staff } from '@modules/staffs/entities/staff.entity';
       Staff,
     ]),
     MailModule,
+    UtilsModule,
   ],
   controllers: [MemberController],
   providers: [MemberService, UserService],

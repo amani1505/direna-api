@@ -17,6 +17,7 @@ import { User } from '@modules/user/entities/user.entity';
 import { Branch } from '@modules/branches/entities/branch.entity';
 import { Service } from '@modules/services/entities/service.entity';
 import { Role } from '@modules/roles/entities/role.entity';
+import { GenerateUniqueNumberUtil } from '@utils/generate-unique-number.util';
 
 @Injectable()
 export class MemberService {
@@ -35,6 +36,7 @@ export class MemberService {
     private _roleRepository: Repository<Role>,
 
     private _userService: UserService,
+    private readonly _generateUniqueNumberUtil: GenerateUniqueNumberUtil,
   ) {}
 
   async create(createMemberDto: CreateMemberDto): Promise<Member> {
@@ -73,8 +75,16 @@ export class MemberService {
         throw new NotFoundException(`One or more services not found`);
       }
 
+      const memberNumber =
+        await this._generateUniqueNumberUtil.generateUniqueNumber(
+          'DIRENA-MEM',
+          this._memberRepository,
+          'member_number',
+        );
+
       const createdMember = this._memberRepository.create({
         ...memberData,
+        member_number: memberNumber,
         branch,
         services, // Assign services directly
       });

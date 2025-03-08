@@ -7,11 +7,15 @@ import {
   Patch,
   Param,
   Delete,
+  // UseGuards,
 } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { PaginationOptions } from '@interface/pagination-option.interface';
 import { UpdateMemberDto } from './dto/update-member.dto';
+// import { RolesGuard } from '@modules/auth/guard/role.guard';
+// import { Roles } from '@modules/auth/decorators/role.decorator';
+// import { JwtAuthGuard } from '@modules/auth/guard/jwt-auth.guard';
 
 @Controller('member')
 export class MemberController {
@@ -22,6 +26,8 @@ export class MemberController {
     return this._memberService.create(createMemberDto);
   }
 
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles('Super Admin')
   @Get()
   findAll(@Query() query: PaginationOptions) {
     return this._memberService.findAll(query);

@@ -16,6 +16,7 @@ import { UserService } from '@modules/user/user.service';
 import { PaginationOptions } from '@interface/pagination-option.interface';
 import { PaginationInterface } from '@interface/pagination.interface';
 import { applyFiltersAndPagination } from '@utils/filter';
+import { GenerateUniqueNumberUtil } from '@utils/generate-unique-number.util';
 
 @Injectable()
 export class StaffsService {
@@ -33,6 +34,7 @@ export class StaffsService {
     private _roleRepository: Repository<Role>,
 
     private _userService: UserService,
+    private readonly _generateUniqueNumberUtil: GenerateUniqueNumberUtil,
   ) {}
 
   async create(createStaffDto: CreateStaffDto): Promise<Staff> {
@@ -65,8 +67,17 @@ export class StaffsService {
         throw new NotFoundException(`role not found`);
       }
 
+      const staffNumber =
+        await this._generateUniqueNumberUtil.generateUniqueNumber(
+          'DIRENA-STF',
+          this._staffRepository,
+          'staff_number',
+        );
+
       const createdStaff = this._staffRepository.create({
         ...staffData,
+        staff_number: staffNumber,
+
         branch,
       });
 

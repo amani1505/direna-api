@@ -22,8 +22,11 @@ export class Staff {
   @Column()
   fullname: string;
 
-  @Column({ unique: true }) // Ensure the email is unique
+  @Column({ unique: true })
   email: string;
+
+  @Column({ unique: true })
+  staff_number: string;
 
   @Column({ nullable: true })
   phone: string;

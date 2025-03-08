@@ -5,12 +5,15 @@ import * as bcrypt from 'bcrypt';
 
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@modules/user/entities/user.entity';
+import { Role } from '@modules/roles/entities/role.entity';
+import { RolesService } from '@modules/roles/roles.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly _userService: UserService,
     private _jwtService: JwtService,
+    private _roleService: RolesService,
   ) {}
 
   async validateUser(username: string, password: string) {
@@ -23,8 +26,10 @@ export class AuthService {
     return null;
   }
   async login(user: User) {
+    const roles = await this._roleService.findSingle(user.roleId);
     const payload = {
       username: user.email,
+      roles: [roles.name],
       sub: {
         name: user.username,
       },
@@ -37,8 +42,10 @@ export class AuthService {
     };
   }
   async refreshToken(user: User) {
+    const roles = await this._roleService.findSingle(user.roleId);
     const payload = {
       username: user.email,
+      roles: [roles],
       sub: {
         name: user.username,
       },

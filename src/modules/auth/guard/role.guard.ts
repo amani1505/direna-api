@@ -2,14 +2,13 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
-  Logger,
+  UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  private readonly logger = new Logger(RolesGuard.name);
-
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
@@ -17,20 +16,44 @@ export class RolesGuard implements CanActivate {
       'roles',
       context.getHandler(),
     );
-    this.logger.log(`Required Roles: ${requiredRoles}`);
 
-    if (!requiredRoles) {
+    // If no roles are required, allow access
+    if (!requiredRoles || requiredRoles.length === 0) {
       return true;
     }
 
-    const { user } = context.switchToHttp().getRequest();
-    this.logger.log(`User: ${JSON.stringify(user)}`);
+    const request = context.switchToHttp().getRequest();
+    const { user } = request;
 
+    // If no user in request, authentication failed
     if (!user) {
-      this.logger.error('User not found in request');
-      return false;
+      throw new UnauthorizedException(
+        'Authentication required for this resource',
+      );
     }
 
-    return requiredRoles.includes(user.role);
+    // If user exists but has no role
+    if (!user.role) {
+      throw new UnauthorizedException({
+        message: 'User has no role assigned',
+        error: 'Missing Role',
+        statusCode: 401,
+      });
+    }
+
+    // Check if the user's role is in the required roles
+    const hasRole = requiredRoles.includes(user.role);
+
+    if (!hasRole) {
+      throw new ForbiddenException({
+        message: `Access denied: Required role ${requiredRoles.join(' or ')}`,
+        error: 'Insufficient Permissions',
+        statusCode: 403,
+        requiredRoles: requiredRoles,
+        userRole: user.role,
+      });
+    }
+
+    return true;
   }
 }

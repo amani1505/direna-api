@@ -90,7 +90,7 @@ export class RolesService {
       );
     }
   }
-  async findOne(id: string, query: any): Promise<Role> {
+  async findOne(id: string, query?: any): Promise<Role> {
     const { relations = [] } = query; // Extract relations from the query
 
     if (!Array.isArray(relations)) {
@@ -117,6 +117,21 @@ export class RolesService {
       const role = await this._roleRepository.findOne({
         where: { id },
         relations,
+      });
+
+      if (!role) {
+        throw new NotFoundException(`Equipment Category not found`);
+      }
+
+      return role;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+    }
+  }
+  async findSingle(id: string): Promise<Role> {
+    try {
+      const role = await this._roleRepository.findOne({
+        where: { id },
       });
 
       if (!role) {

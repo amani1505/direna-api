@@ -243,6 +243,22 @@ export class UserService {
     }
   }
 
+  async findOneByEmail(email: string): Promise<User> {
+    try {
+      const user = await this._userRepository.findOne({
+        where: { email },
+        relations: ['role'],
+      });
+      if (!user) {
+        throw new NotFoundException(`user not found`);
+      }
+
+      return user;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+    }
+  }
+
   async remove(id: string, userType: string) {
     try {
       const user = await this._userRepository.findOne({
