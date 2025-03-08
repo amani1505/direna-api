@@ -22,10 +22,12 @@ export class RolesSeeder {
       if (!existingRole) {
         const newRole = new Role();
         newRole.name = role.name;
+        newRole.short_name = role.short_name;
         newRole.description = role.description;
 
         await this._roleRepository.save(newRole);
       } else {
+        existingRole.short_name = role.short_name;
         existingRole.description = role.description;
         await this._roleRepository.save(existingRole);
       }

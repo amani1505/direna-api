@@ -14,7 +14,13 @@ export class CreateRoleDto {
   @MaxLength(50)
   name: string;
 
-  //   @ApiPropertyOptional({ description: 'Role description', maximum: 500 })
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(5)
+  @IsOptional()
+  @IsString()
+  short_name: string;
+
   @IsString()
   @IsOptional()
   @MaxLength(500)

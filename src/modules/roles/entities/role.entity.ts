@@ -1,8 +1,10 @@
+import { RoleAction } from '@modules/role-actions/entities/role-action.entity';
 import { User } from '@modules/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -15,6 +17,12 @@ export class Role {
 
   @Column({ unique: true })
   name: string;
+
+  @Column()
+  short_name: string;
+
+  @ManyToMany(() => RoleAction, (roleAction) => roleAction.roles)
+  actions: RoleAction[];
 
   @Column({ nullable: true })
   description: string;

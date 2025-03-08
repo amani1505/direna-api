@@ -1,6 +1,6 @@
 import { MailService } from '@modules/mail/mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { Module } from '@nestjs/common';
+import { Module, NotFoundException } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 // import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
@@ -16,7 +16,9 @@ import * as fs from 'fs';
 
         // Verify template directory exists
         if (!fs.existsSync(templateDir)) {
-          console.error(`Template directory does not exist: ${templateDir}`);
+          throw new NotFoundException(
+            `Template directory does not exist: ${templateDir}`,
+          );
         }
 
         return {

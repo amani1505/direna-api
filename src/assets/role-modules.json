@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Staff Management",
+    "description": "Module for managing administrative tasks and system settings."
+  },
+  {
+    "name": "Member Management",
+    "description": "Module for managing user accounts, roles, and permissions."
+  },
+  {
+    "name": "Product Management",
+
+    "description": "Module for managing product catalog, inventory, and pricing."
+  },
+  {
+    "name": "Services Management",
+    "description": "Module for managing customer services, payments, and shipments."
+  },
+  {
+    "name": "Reporting",
+    "description": "Module for generating and analyzing system reports."
+  }
+]

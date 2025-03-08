@@ -1,0 +1,30 @@
+[
+  {
+    "module_name": "Staff Management",
+    "action": "create",
+    "display_name": "Create",
+    "display_group": "Management",
+    "description": "Allows users to create new records in the system."
+  },
+  {
+    "module_name": "Member Management",
+    "action": "read",
+    "display_name": "Read",
+    "display_group": "Management",
+    "description": "Allows users to view records in the system."
+  },
+  {
+    "module_name": "Product Management",
+    "action": "update",
+    "display_name": "Update",
+    "display_group": "Management",
+    "description": "Allows users to modify existing records in the system."
+  },
+  {
+    "module_name": "Services Management",
+    "action": "delete",
+    "display_name": "Delete",
+    "display_group": "Management",
+    "description": "Allows users to remove records from the system."
+  }
+]

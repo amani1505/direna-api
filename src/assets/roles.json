@@ -1,26 +1,32 @@
 [
   {
-    "name": "Admin",
+    "name": "Super Admin",
+    "short_name": "SA",
     "description": "Has full access to all dashboard features, including user and role management, reports, and system settings."
   },
   {
     "name": "Manager",
+    "short_name": "MG",
     "description": "Manages gym operations, including memberships, schedules, and trainer assignments."
   },
   {
     "name": "Trainer",
+    "short_name": "TN",
     "description": "Responsible for conducting training sessions and managing client progress."
   },
   {
     "name": "Receptionist",
+    "short_name": "RP",
     "description": "Handles front desk operations, membership registrations, and member inquiries."
   },
   {
     "name": "User",
+    "short_name": "US",
     "description": "Regular gym member with access to workout schedules, personal progress, and bookings."
   },
   {
     "name": "Cleaner",
+    "short_name": "CN",
     "description": "Responsible for maintaining cleanliness and hygiene in the gym premises."
   }
 ]

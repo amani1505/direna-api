@@ -10,6 +10,8 @@ import {
   UseInterceptors,
   UploadedFiles,
   UploadedFile,
+  // UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
 import { EquipmentService } from './equipment.service';
 import { CreateEquipmentDto } from './dto/create-equipment.dto';
@@ -18,6 +20,9 @@ import { PaginationOptions } from '@interface/pagination-option.interface';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+// import { Roles } from '@modules/auth/decorators/role.decorator';
+// import { RolesGuard } from '@modules/auth/guard/role.guard';
+// import { JwtAuthGuard } from '@modules/auth/guard/jwt-auth.guard';
 
 @Controller('equipment')
 export class EquipmentController {
@@ -66,6 +71,8 @@ export class EquipmentController {
     return this._equipmentService.uploadEquipmentImage(id, file);
   }
 
+  // @UseGuards(RolesGuard)
+  // @Roles('admin', 'user')
   @Get()
   findAll(@Query() query: PaginationOptions) {
     return this._equipmentService.findAll(query);
