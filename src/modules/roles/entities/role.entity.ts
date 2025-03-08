@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -21,14 +22,15 @@ export class Role {
   @Column()
   short_name: string;
 
-  @ManyToMany(() => RoleAction, (roleAction) => roleAction.roles)
-  actions: RoleAction[];
-
   @Column({ nullable: true })
   description: string;
 
   @OneToMany(() => User, (user) => user.role)
   users: Array<User>;
+
+  @ManyToMany(() => RoleAction, (roleAction) => roleAction.roles)
+  @JoinTable({ name: 'role_has_actions' })
+  actions: RoleAction[];
 
   @CreateDateColumn()
   created_at: Date;

@@ -25,6 +25,7 @@ import { RoleModulesModule } from './modules/role-modules/role-modules.module';
 import { RoleActionsModule } from './modules/role-actions/role-actions.module';
 import { RoleModulesSeeder } from '@seeder/role-module.seeder';
 import { RoleActionsSeeder } from '@seeder/role-action.seedet';
+import { UserSeeder } from '@seeder/user.seeder';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ export class AppModule implements OnModuleInit {
     private readonly _roleModuleSeeder: RoleModulesSeeder,
     private readonly _roleActionSeeder: RoleActionsSeeder,
     private readonly _roleSeeder: RolesSeeder,
+    private readonly _userSeeder: UserSeeder,
     private readonly _equipmentCategorySeeder: EquipmentCategorySeeder,
   ) {}
   onModuleInit() {
@@ -69,6 +71,7 @@ export class AppModule implements OnModuleInit {
     this._roleModuleSeeder.seed();
     this._roleActionSeeder.seed();
     this._roleSeeder.seed();
+    this._userSeeder.seed();
     this._equipmentCategorySeeder.seed();
   }
 }

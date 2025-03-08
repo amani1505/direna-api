@@ -8,6 +8,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,6 +16,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { JwtAuthGuard } from '@modules/auth/guard/jwt-auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -73,6 +75,7 @@ export class UserController {
   //   return this.userService.findOne(+id);
   // }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this._userService.update(id, updateUserDto);

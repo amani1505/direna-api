@@ -8,14 +8,16 @@ import { Files } from '../file/entities/file.entity';
 import { Member } from '@modules/member/entities/member.entity';
 import { Staff } from '@modules/staffs/entities/staff.entity';
 import { Blog } from '@modules/blog/entities/blog.entity';
+import { UserSeeder } from '@seeder/user.seeder';
+import { Role } from '@modules/roles/entities/role.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Files, Member, Staff, Blog]),
+    TypeOrmModule.forFeature([User, Files, Member, Staff, Blog, Role]),
     MailModule,
   ],
   controllers: [UserController],
-  providers: [UserService],
-  exports: [UserService],
+  providers: [UserService, UserSeeder],
+  exports: [UserService, UserSeeder],
 })
 export class UserModule {}

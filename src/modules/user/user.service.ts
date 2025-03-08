@@ -159,6 +159,10 @@ export class UserService {
       user.username = updateUserDto.username;
     }
 
+    if (updateUserDto.password) {
+      user.password = await bcrypt.hash(updateUserDto.username, 10);
+    }
+
     await this._userRepository.save(user);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
