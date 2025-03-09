@@ -77,7 +77,7 @@ export class AuthService implements OnModuleInit {
         this.tokenExpiryMap.set(token, decoded.exp);
       }
     } catch (error) {
-      console.error('Error adding token to blacklist:', error);
+      throw new Error(error);
     }
   }
 

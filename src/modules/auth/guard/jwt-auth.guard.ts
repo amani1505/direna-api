@@ -58,7 +58,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return super.canActivate(context);
   }
 
-  handleRequest(err, user) {
+  handleRequest(err: any, user: any) {
     // If there is an error or no user, throw an exception
     if (err || !user) {
       throw err || new UnauthorizedException('Invalid token');
