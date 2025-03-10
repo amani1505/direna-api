@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   OnModuleInit,
   UnauthorizedException,
@@ -25,16 +26,27 @@ export class AuthService implements OnModuleInit {
     setInterval(() => this.cleanupExpiredTokens(), 3600000);
   }
 
-  async validateUser(username: string, password: string) {
+  async validateUser(username: string, password: string): Promise<any> {
+    // Step 1: Find the user by username
     const user = await this._userService.findOneByUsername(username);
-
-    if (user && (await bcrypt.compare(password, user.password))) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = user;
-      return result;
+    if (!user) {
+      throw new BadRequestException(
+        'Invalid credentials::Please valid credentials',
+      );
     }
-    return null;
+
+    // Step 2: Compare the provided password with the stored hash
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new BadRequestException(
+        'Invalid credentials::Please valid credentials',
+      );
+    }
+
+    // Step 3: Return the user if everything is valid
+    return user;
   }
+
   async login(user: User) {
     const roles = await this._roleService.findSingle(user.roleId);
     const payload = {

@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Headers,
   UnauthorizedException,
+  NotFoundException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guard/local-auth.guard';
@@ -25,9 +26,18 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req) {
-    req.session.userId = req.user.id;
-
-    return await this._authService.login(req.user);
+    try {
+      req.session.userId = req.user.id;
+      return await this._authService.login(req.user);
+    } catch (error) {
+      // Handle specific errors
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException(error.message);
+      } else if (error instanceof UnauthorizedException) {
+        throw new UnauthorizedException(error.message);
+      }
+      throw new UnauthorizedException('Login failed');
+    }
   }
 
   @UseGuards(RefreshJwtAuthGuard)
