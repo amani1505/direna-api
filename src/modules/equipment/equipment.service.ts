@@ -75,15 +75,23 @@ export class EquipmentService {
     query: PaginationOptions,
   ): Promise<PaginationInterface<Equipment> | Equipment[]> {
     try {
-      const { relations = [], sortBy = 'title', sortOrder = 'ASC' } = query;
+      const {
+        relations = [],
+        sortBy = 'title',
+        sortOrder = 'ASC',
+        filterBy,
+        search,
+      } = query;
 
       const queryBuilder =
         this._equipmentRepository.createQueryBuilder('equipment');
 
+      // Get valid relations for the Equipment entity
       const validRelations = getMetadataArgsStorage()
         .relations.filter((relation) => relation.target === Equipment)
         .map((relation) => relation.propertyName);
 
+      // Add requested relations to the query
       relations.forEach((relation: string) => {
         if (!validRelations.includes(relation)) {
           throw new HttpException(
@@ -94,9 +102,31 @@ export class EquipmentService {
         queryBuilder.leftJoinAndSelect(`equipment.${relation}`, relation);
       });
 
+      // Create a copy of the query object to modify
+      const modifiedQuery = { ...query, sortBy, sortOrder };
+
+      // Handle category_name filtering separately
+      if (filterBy === 'category' && search) {
+        // Join the categories table if not already joined
+        if (!relations.includes('categories')) {
+          queryBuilder.leftJoin('equipment.categories', 'categories');
+        }
+
+        // Apply the category name filter directly
+        queryBuilder.andWhere('categories.category_name = :categoryName', {
+          categoryName: search,
+        });
+
+        // Remove the filter and search from the modified query
+        // to prevent applyFiltersAndPagination from trying to apply it again
+        delete modifiedQuery.filterBy;
+        delete modifiedQuery.search;
+      }
+
+      // Apply other filters and pagination
       return applyFiltersAndPagination(
         queryBuilder,
-        { ...query, sortBy, sortOrder },
+        modifiedQuery,
         validRelations,
         'equipment',
       );

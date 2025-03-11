@@ -57,7 +57,7 @@ export class EquipmentCategoryService {
   ): Promise<PaginationInterface<EquipmentCategory> | EquipmentCategory[]> {
     try {
       const {
-        relations = [],
+        relations = ['equipments'],
         sortBy = 'category_name',
         sortOrder = 'DESC',
       } = query;

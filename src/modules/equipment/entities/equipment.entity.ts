@@ -55,7 +55,7 @@ export class Equipment {
   @OneToMany(() => Files, (file) => file.equipment)
   files: Array<Files>;
 
-  @ManyToMany(() => EquipmentCategory, (category) => category.equipmemnts, {
+  @ManyToMany(() => EquipmentCategory, (category) => category.equipments, {
     cascade: true,
   })
   @JoinTable({ name: 'equipment_has_category' })

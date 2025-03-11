@@ -20,7 +20,7 @@ export class EquipmentCategory {
   image: string;
 
   @ManyToMany(() => Equipment, (equipment) => equipment.categories)
-  equipmemnts: Array<Equipment>;
+  equipments: Array<Equipment>;
 
   @CreateDateColumn()
   created_at: Date;
