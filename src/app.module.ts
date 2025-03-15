@@ -32,6 +32,8 @@ import { RoleModulesSeeder } from '@seeder/role-module.seeder';
 import { RoleActionsSeeder } from '@seeder/role-action.seedet';
 import { UserSeeder } from '@seeder/user.seeder';
 import { TokenBlacklistMiddleware } from '@modules/auth/middleware/token-blacklist.middleware';
+import { CartModule } from './modules/cart/cart.module';
+import { OrderModule } from './modules/order/order.module';
 
 @Module({
   imports: [
@@ -57,6 +59,8 @@ import { TokenBlacklistMiddleware } from '@modules/auth/middleware/token-blackli
     AuthModule,
     RoleModulesModule,
     RoleActionsModule,
+    CartModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],
