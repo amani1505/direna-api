@@ -13,15 +13,12 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 import { RefreshJwtAuthGuard } from './guard/refresh-auth.guard';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
-import { JwtService } from '@nestjs/jwt';
+
 import { SessionGuard } from './guard/session.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private _authService: AuthService,
-    private _jwtService: JwtService,
-  ) {}
+  constructor(private _authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')

@@ -12,7 +12,7 @@ import { Equipment } from '@modules/equipment/entities/equipment.entity';
 
 @Entity('cart_items')
 export class CartItem {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @ManyToOne(() => Cart, (cart) => cart.items, { onDelete: 'CASCADE' })

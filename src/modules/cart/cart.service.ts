@@ -31,7 +31,7 @@ export class CartService {
       if (user) {
         cart = await this._cartRepository.findOne({
           where: { user: { id: user.id } },
-          relations: ['items', 'items.equipment'],
+          relations: ['items', 'items.equipment', 'items.equipment.files'],
         });
 
         if (!cart) {
@@ -85,7 +85,7 @@ export class CartService {
       await this._cartItemRepository.save(cartItem);
       return this._cartRepository.findOne({
         where: { id: cart.id },
-        relations: ['items', 'items.equipment'],
+        relations: ['items', 'items.equipment', 'items.equipment.files'],
       });
     } catch (error) {
       throw new InternalServerErrorException(
@@ -121,7 +121,7 @@ export class CartService {
 
       return this._cartRepository.findOne({
         where: { id: cart.id },
-        relations: ['items', 'items.equipment'],
+        relations: ['items', 'items.equipment', 'items.equipment.files'],
       });
     } catch (error) {
       throw new InternalServerErrorException(
@@ -144,7 +144,7 @@ export class CartService {
       await this._cartItemRepository.remove(cartItem);
       return this._cartRepository.findOne({
         where: { id: cart.id },
-        relations: ['items', 'items.equipment'],
+        relations: ['items', 'items.equipment', 'items.equipment.files'],
       });
     } catch (error) {
       throw new InternalServerErrorException(

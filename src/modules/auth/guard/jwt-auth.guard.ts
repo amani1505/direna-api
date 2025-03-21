@@ -1,25 +1,3 @@
-// import { Injectable } from '@nestjs/common';
-// import { AuthGuard } from '@nestjs/passport';
-
-// @Injectable()
-// export class JwtAuthGuard extends AuthGuard('jwt') {
-//   //   canActivate(context: ExecutionContext) {
-//   //     console.log('JwtAuthGuard: Checking authentication...', context); // Debugging
-//   //     return super.canActivate(context);
-//   //   }
-//   //   handleRequest(err, user, info) {
-//   //     console.log('JwtAuthGuard: User:', user);
-//   //     console.log('JwtAuthGuard: Info:', info);
-//   //     console.log('JwtAuthGuard: Error:', err);
-//   //     if (err || !user) {
-//   //       throw err || new UnauthorizedException('Unauthorized');
-//   //     }
-//   //     return user;
-//   //   }
-// }
-
-// File: src/modules/auth/guard/jwt-auth.guard.ts
-
 import {
   Injectable,
   ExecutionContext,
@@ -50,7 +28,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const token = authHeader.split(' ')[1];
 
     // Check if token is blacklisted
-    if (this.authService.isTokenBlacklisted(token)) {
+    if (this.authService?.isTokenBlacklisted(token)) {
       throw new UnauthorizedException('Token has been revoked');
     }
 

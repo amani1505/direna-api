@@ -1,6 +1,9 @@
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Injectable,
+  InternalServerErrorException,
   OnModuleInit,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -27,29 +30,38 @@ export class AuthService implements OnModuleInit {
   }
 
   async validateUser(username: string, password: string): Promise<any> {
-    // Step 1: Find the user by username
-    const user = await this._userService.findOneByUsername(username);
-    if (!user) {
-      throw new BadRequestException(
-        'Invalid credentials::Please valid credentials',
+    try {
+      // Step 1: Find the user by username
+      const user = await this._userService.findOneByUsername(username);
+      if (!user) {
+        throw new BadRequestException(
+          'Invalid credentials::Please Enter valid credentials',
+        );
+      }
+
+      // Step 2: Compare the provided password with the stored hash
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        throw new BadRequestException(
+          'Invalid credentials::Please Enter valid credentials',
+        );
+      }
+
+      return user;
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error; // Re-throw known errors
+      }
+      throw new InternalServerErrorException(
+        `An error occurred while validating the user: ${error.message}`,
       );
     }
-
-    // Step 2: Compare the provided password with the stored hash
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      throw new BadRequestException(
-        'Invalid credentials::Please valid credentials',
-      );
-    }
-
-    // Step 3: Return the user if everything is valid
-    return user;
   }
 
   async login(user: User) {
     const roles = await this._roleService.findSingle(user.roleId);
     const payload = {
+      id: user.id,
       username: user.email,
       roles: [roles.name],
       sub: {
@@ -66,6 +78,7 @@ export class AuthService implements OnModuleInit {
   async refreshToken(user: User) {
     const roles = await this._roleService.findSingle(user.roleId);
     const payload = {
+      id: user.id,
       username: user.email,
       roles: [roles],
       sub: {
@@ -95,16 +108,30 @@ export class AuthService implements OnModuleInit {
 
   // Check if a token is blacklisted
   isTokenBlacklisted(token: string): boolean {
-    return this.tokenBlacklist.has(token);
+    try {
+      return this.tokenBlacklist.has(token);
+    } catch (error) {
+      throw new HttpException(
+        `Failed to get!:${error.message}`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 
   private cleanupExpiredTokens() {
-    const now = Math.floor(Date.now() / 1000);
-    for (const [token, expiry] of this.tokenExpiryMap.entries()) {
-      if (expiry <= now) {
-        this.tokenBlacklist.delete(token);
-        this.tokenExpiryMap.delete(token);
+    try {
+      const now = Math.floor(Date.now() / 1000);
+      for (const [token, expiry] of this.tokenExpiryMap.entries()) {
+        if (expiry <= now) {
+          this.tokenBlacklist.delete(token);
+          this.tokenExpiryMap.delete(token);
+        }
       }
+    } catch (error) {
+      throw new HttpException(
+        `Failed to delete!:${error.message}`,
+        HttpStatus.NOT_ACCEPTABLE,
+      );
     }
   }
 
