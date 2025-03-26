@@ -1,6 +1,11 @@
 [
   {
     "username": "superAdmin123",
+    "first_name": "Direna",
+    "middle_name": "Super",
+    "last_name": "Admin",
+    "phone_number": "+255 757 228 903",
+    "gender": "male",
     "email": "super.admin123@gmail.com",
     "password": "super.admin",
     "role_name": "Super Admin"

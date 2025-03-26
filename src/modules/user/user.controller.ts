@@ -11,6 +11,8 @@ import {
   UseGuards,
   Get,
   Request,
+  Headers,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,10 +21,15 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { JwtAuthGuard } from '@modules/auth/guard/jwt-auth.guard';
+import { CreateMemberDto } from '@modules/member/dto/create-member.dto';
+import { AuthService } from '@modules/auth/auth.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly _userService: UserService) {}
+  constructor(
+    private readonly _userService: UserService,
+    private readonly _authService: AuthService,
+  ) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -48,6 +55,29 @@ export class UserController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     return this._userService.uploadUserAvatar(id, file);
+  }
+
+  @Post('become-member')
+  async becomeMember(
+    @Request() updateUserToMemberDTO: CreateMemberDto,
+    @Headers('authorization') authorizationHeader: string,
+  ) {
+    try {
+      const token = authorizationHeader.replace('Bearer ', '');
+      const user = await this._authService.verifyToken(token);
+
+      if (!user) {
+        throw new UnauthorizedException(
+          'You are not authorized to become a member.',
+        );
+      }
+      await this._userService.becomeAmember(updateUserToMemberDTO, {
+        id: user.id,
+        role: user.role[0],
+      });
+    } catch (error) {
+      throw new UnauthorizedException(`${error.message}`);
+    }
   }
 
   @Patch('avatar/:id')

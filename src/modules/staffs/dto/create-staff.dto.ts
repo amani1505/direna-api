@@ -1,9 +1,16 @@
 import { GenderEnum } from '@enum/gender.enum';
-import { IsEmail, IsEnum, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class CreateStaffDto {
   @IsString()
-  fullname: string;
+  first_name: string;
+
+  @IsOptional()
+  @IsString()
+  middle_name: string;
+
+  @IsString()
+  last_name: string;
 
   @IsEmail()
   email: string;
@@ -19,10 +26,4 @@ export class CreateStaffDto {
 
   @IsString()
   phone: string;
-
-  @IsString()
-  address: string;
-
-  @IsString()
-  city: string;
 }

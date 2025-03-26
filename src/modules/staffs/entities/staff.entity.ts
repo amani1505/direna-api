@@ -20,7 +20,13 @@ export class Staff {
   id: string;
 
   @Column()
-  fullname: string;
+  first_name: string;
+
+  @Column({ nullable: true })
+  middle_name: string;
+
+  @Column()
+  last_name: string;
 
   @Column({ unique: true })
   email: string;
@@ -30,12 +36,6 @@ export class Staff {
 
   @Column({ nullable: true })
   phone: string;
-
-  @Column({ nullable: true })
-  address: string;
-
-  @Column({ nullable: true })
-  city: string;
 
   @Column({ type: 'boolean', default: true })
   isActive: boolean;

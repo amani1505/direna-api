@@ -8,6 +8,7 @@ import {
   Headers,
   UnauthorizedException,
   NotFoundException,
+  Get,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guard/local-auth.guard';
@@ -82,5 +83,20 @@ export class AuthController {
         });
       }
     });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('signInWithToken')
+  async signInWithToken(
+    @Headers('authorization') authorizationHeader: string,
+  ): Promise<{ message: string }> {
+    try {
+      const token = authorizationHeader.replace('Bearer ', ''); // Extract the token from the "Bearer " prefix
+      await this._authService.verifyToken(token);
+
+      return { message: 'Sign-in with token successful' };
+    } catch (error) {
+      throw new UnauthorizedException(`Invalid token: ${error.message}`);
+    }
   }
 }

@@ -33,6 +33,11 @@ export class UserSeeder {
         const newUser = new User();
         newUser.username = user.username;
         newUser.email = user.email;
+        newUser.first_name = user.first_name;
+        newUser.middle_name = user.middle_name;
+        newUser.last_name = user.last_name;
+        newUser.phone_number = user.phone_number;
+        newUser.gender = user.gender;
         newUser.password = await bcrypt.hash(user.password, 10); // Hash the password
         newUser.roleId = role.id;
 
@@ -41,6 +46,11 @@ export class UserSeeder {
         // Update the existing user
         existingUser.username = user.username;
         existingUser.email = user.email;
+        existingUser.first_name = user.first_name;
+        existingUser.middle_name = user.middle_name;
+        existingUser.last_name = user.last_name;
+        existingUser.phone_number = user.phone_number;
+        existingUser.gender = user.gender;
         existingUser.password = await bcrypt.hash(user.password, 10); // Hash the password
         existingUser.roleId = role.id;
 

@@ -41,7 +41,7 @@ export class AuthService implements OnModuleInit {
 
       // Step 2: Compare the provided password with the stored hash
       const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
+      if (user && !isPasswordValid) {
         throw new BadRequestException(
           'Invalid credentials::Please Enter valid credentials',
         );

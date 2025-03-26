@@ -1,10 +1,8 @@
-import {
-  IsString,
-} from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreateServiceDto {
-@IsString()
+  @IsString()
   name: string;
-@IsString()
+  @IsString()
   description: string;
 }

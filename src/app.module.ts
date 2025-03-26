@@ -34,6 +34,7 @@ import { UserSeeder } from '@seeder/user.seeder';
 import { TokenBlacklistMiddleware } from '@modules/auth/middleware/token-blacklist.middleware';
 import { CartModule } from './modules/cart/cart.module';
 import { OrderModule } from './modules/order/order.module';
+import { AddressModule } from './modules/address/address.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { OrderModule } from './modules/order/order.module';
     RoleActionsModule,
     CartModule,
     OrderModule,
+    AddressModule,
   ],
   controllers: [AppController],
   providers: [AppService],

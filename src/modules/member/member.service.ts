@@ -52,7 +52,7 @@ export class MemberService {
       });
 
       const role = await this._roleRepository.findOne({
-        where: { name: 'user' },
+        where: { name: 'Member' },
       });
 
       if (email) {
@@ -93,7 +93,11 @@ export class MemberService {
 
       await this._userService.create(
         {
-          fullname: createdMember.fullname,
+          first_name: createMemberDto.first_name,
+          middle_name: createMemberDto.middle_name,
+          last_name: createMemberDto.last_name,
+          phone_number: createMemberDto.phone,
+          gender: createMemberDto.gender,
           email: createMemberDto.email,
           roleId: role.id,
           memberId: memberCreated.id,
@@ -110,11 +114,70 @@ export class MemberService {
     }
   }
 
+  async becomeAMember(createMemberDto: CreateMemberDto): Promise<Member> {
+    try {
+      const { serviceIds, branchId, ...memberData } = createMemberDto;
+
+      const member = await this._memberRepository.findOne({
+        where: { email: createMemberDto.email },
+      });
+
+      const branch = await this._branchRepository.findOne({
+        where: { id: branchId },
+      });
+
+      if (member) {
+        throw new HttpException('User already a member', HttpStatus.CONFLICT);
+      }
+
+      if (!branch) {
+        throw new NotFoundException(`branch not found`);
+      }
+
+      const services = await this._serviceRepository.find({
+        where: {
+          id: In(serviceIds), // Import In from typeorm
+        },
+      });
+
+      if (services.length !== serviceIds.length) {
+        throw new NotFoundException(`One or more services not found`);
+      }
+
+      const memberNumber =
+        await this._generateUniqueNumberUtil.generateUniqueNumber(
+          'DIRENA-MEM',
+          this._memberRepository,
+          'member_number',
+        );
+
+      const createdMember = this._memberRepository.create({
+        ...memberData,
+        member_number: memberNumber,
+        branch,
+        services,
+      });
+
+      const memberCreated = await this._memberRepository.save(createdMember);
+
+      return memberCreated;
+    } catch (error) {
+      throw new HttpException(
+        `Failed to create!:${error.message}`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
   async findAll(
     query: PaginationOptions,
   ): Promise<PaginationInterface<Member> | Member[]> {
     try {
-      const { relations = [], sortBy = 'fullname', sortOrder = 'ASC' } = query;
+      const {
+        relations = [],
+        sortBy = 'first_name',
+        sortOrder = 'ASC',
+      } = query;
 
       const queryBuilder = this._memberRepository.createQueryBuilder('member');
 
@@ -263,7 +326,7 @@ export class MemberService {
       await this._memberRepository.delete(member.id); // Using delete instead of remove
 
       return {
-        message: `Successfully deleted the member: ${member.fullname}`,
+        message: `Successfully deleted the member: ${member.last_name}`,
         status: 'success',
       };
     } catch (error) {

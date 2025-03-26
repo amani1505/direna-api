@@ -19,10 +19,16 @@
     "short_name": "RP",
     "description": "Handles front desk operations, membership registrations, and member inquiries."
   },
+  
+  {
+    "name": "Member",
+    "short_name": "MB",
+    "description": "Access to workout schedules, personal progress, and bookings for their specific gym membership."
+  },
   {
     "name": "User",
     "short_name": "US",
-    "description": "Regular gym member with access to workout schedules, personal progress, and bookings."
+    "description": "Access to the E-Commerce Platform"
   },
   {
     "name": "Cleaner",

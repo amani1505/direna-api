@@ -1,3 +1,5 @@
+import { GenderEnum } from '@enum/gender.enum';
+import { Address } from '@modules/address/entities/address.entity';
 import { Blog } from '@modules/blog/entities/blog.entity';
 import { Member } from '@modules/member/entities/member.entity';
 import { Role } from '@modules/roles/entities/role.entity';
@@ -31,6 +33,21 @@ export class User {
   email: string;
 
   @Column()
+  first_name: string;
+
+  @Column({ nullable: true })
+  middle_name: string;
+
+  @Column()
+  last_name: string;
+
+  @Column()
+  phone_number: string;
+
+  @Column({ enum: GenderEnum })
+  gender: string;
+
+  @Column()
   @Exclude()
   password: string;
 
@@ -44,9 +61,15 @@ export class User {
   @Column({ nullable: true })
   roleId: string;
 
+  @OneToMany(() => Address, (address) => address.user, {
+    cascade: true,
+  })
+  addresses: Address[];
+
   @OneToOne(() => Member, (member) => member.user) // One-to-One with Member
   @JoinColumn({ name: 'memberId' })
   member: Member;
+
   @Column({ nullable: true })
   @Exclude()
   memberId: string;

@@ -1,4 +1,5 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { GenderEnum } from '@enum/gender.enum';
+import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserDto {
   @IsOptional()
@@ -6,10 +7,19 @@ export class CreateUserDto {
   username?: string;
 
   @IsString()
-  fullname: string;
+  first_name: string;
+
+  @IsString()
+  last_name: string;
 
   @IsEmail()
   email: string;
+
+  @IsString()
+  phone_number: string;
+
+  @IsEnum(GenderEnum)
+  gender: string;
 
   @IsString()
   password?: string;
@@ -24,4 +34,8 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   staffId?: string;
+
+  @IsOptional()
+  @IsString()
+  middle_name: string;
 }

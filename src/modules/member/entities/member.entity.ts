@@ -20,7 +20,13 @@ export class Member {
   id: string;
 
   @Column()
-  fullname: string;
+  first_name: string;
+
+  @Column({ nullable: true })
+  middle_name: string;
+
+  @Column()
+  last_name: string;
 
   @Column({ unique: true }) // Ensure the email is unique
   email: string;
@@ -31,19 +37,13 @@ export class Member {
   @Column({ nullable: true })
   phone: string;
 
-  @Column({ nullable: true })
-  address: string;
-
-  @Column({ nullable: true })
-  city: string;
-
   @Column({ type: 'enum', enum: GenderEnum })
   gender: GenderEnum;
 
   @Column({ type: 'int', nullable: true })
   age: number;
 
-  @Column() // For decimals
+  @Column({ nullable: true }) // For decimals
   weight: string;
 
   @Column({ nullable: true }) // For decimals

@@ -84,7 +84,11 @@ export class StaffsService {
       const staffCreated = await this._staffRepository.save(createdStaff);
       await this._userService.create(
         {
-          fullname: createdStaff.fullname,
+          first_name: createStaffDto.first_name,
+          middle_name: createStaffDto.middle_name,
+          last_name: createStaffDto.last_name,
+          phone_number: createStaffDto.phone,
+          gender: createStaffDto.gender,
           email: createStaffDto.email,
           roleId: role,
           staffId: staffCreated.id,
@@ -104,7 +108,11 @@ export class StaffsService {
     query: PaginationOptions,
   ): Promise<PaginationInterface<Staff> | Staff[]> {
     try {
-      const { relations = [], sortBy = 'fullname', sortOrder = 'ASC' } = query;
+      const {
+        relations = [],
+        sortBy = 'first_name',
+        sortOrder = 'ASC',
+      } = query;
 
       const queryBuilder = this._staffRepository.createQueryBuilder('staff');
 
@@ -277,7 +285,7 @@ export class StaffsService {
       await this._staffRepository.delete(staff.id); // Using delete instead of remove
 
       return {
-        message: `Successfully deleted the staff: ${staff.fullname}`,
+        message: `Successfully deleted the staff: ${staff.last_name}`,
         status: 'success',
       };
     } catch (error) {

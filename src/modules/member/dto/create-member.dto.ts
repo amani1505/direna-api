@@ -10,13 +10,16 @@ import {
 
 export class CreateMemberDto {
   @IsString()
-  fullname: string;
+  first_name: string;
+
+  @IsString()
+  last_name: string;
 
   @IsEmail()
   email: string;
 
   @IsString()
-  branchId?: string;
+  branchId: string;
 
   @IsArray()
   serviceIds: Array<string>;
@@ -25,23 +28,11 @@ export class CreateMemberDto {
   gender: GenderEnum;
 
   @IsOptional()
-  @IsString()
-  phone?: string;
-
-  @IsOptional()
-  @IsString()
-  address?: string;
-
-  @IsOptional()
-  @IsString()
-  city?: string;
-
-  @IsOptional()
   @IsNumber()
   age?: number;
 
   @IsString()
-  weight: string;
+  weight?: string;
 
   @IsOptional()
   @IsString()
@@ -53,4 +44,12 @@ export class CreateMemberDto {
 
   @IsOptional()
   isActive?: boolean;
+
+  @IsOptional()
+  @IsString()
+  middle_name?: string;
+
+  @IsOptional()
+  @IsString()
+  phone?: string;
 }
