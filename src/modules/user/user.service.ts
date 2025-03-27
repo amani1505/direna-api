@@ -258,7 +258,7 @@ export class UserService {
       }
     }
 
-    if (updateUserDto.email) {
+    if (updateUserDto.email !== user.email) {
       const existingEmail = await this._userRepository.findOne({
         where: { email: updateUserDto.email },
       });
@@ -283,6 +283,22 @@ export class UserService {
 
     if (updateUserDto.password) {
       user.password = await bcrypt.hash(updateUserDto.username, 10);
+    }
+
+    if (updateUserDto.first_name) {
+      user.first_name = updateUserDto.first_name;
+    }
+    if (updateUserDto.middle_name) {
+      user.middle_name = updateUserDto.middle_name;
+    }
+    if (updateUserDto.last_name) {
+      user.last_name = updateUserDto.last_name;
+    }
+    if (updateUserDto.phone_number) {
+      user.phone_number = updateUserDto.phone_number;
+    }
+    if (updateUserDto.gender) {
+      user.gender = updateUserDto.gender;
     }
 
     await this._userRepository.save(user);
