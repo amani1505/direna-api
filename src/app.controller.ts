@@ -21,7 +21,6 @@ export class AppController {
   @UseGuards(JwtAuthGuard, SessionGuard)
   @Get('me')
   async findOne(@Request() req) {
-    console.log(req.user);
     return this._userService.getProfile(req.user.id);
   }
 }

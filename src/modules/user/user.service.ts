@@ -413,7 +413,7 @@ export class UserService {
       const { staffId, staff, roleId, password, ...userData } = user;
 
       return {
-        ...userData, // Spread user data without staffId and staff
+        profile: userData, // Spread user data without staffId and staff
         member, // Include the member details
       };
     } else if (user.staffId) {
@@ -431,7 +431,7 @@ export class UserService {
       const { memberId, roleId, password, member, ...userData } = user;
 
       return {
-        ...userData, // Spread user data without memberId and member
+        profile: userData, // Spread user data without memberId and member
         staff, // Include the staff details
       };
     } else {
