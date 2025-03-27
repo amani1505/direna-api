@@ -44,16 +44,28 @@ export class AuthController {
     return await this._authService.refreshToken(req.user);
   }
 
-  // @Get('signInWithToken')
-  // async signInWithToken(
-  //   @Headers('authorization') authorizationHeader: string,
-  // ): Promise<{ message: string }> {
-  //   try {
-  //     return { message: 'Sign-in with token successful' };
-  //   } catch (error) {
-  //     throw new UnauthorizedException(`${error.message}`);
-  //   }
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Post('forget-password')
+  async forgetPassword(@Request() req) {
+    return await this._authService.forgetPassword(req.body.email);
+  }
+
+  @Post('change-password')
+  async changePassword(
+    @Request() req,
+    @Headers('authorization') authorizationHeader: string,
+  ) {
+    const token = authorizationHeader.replace('Bearer ', '');
+    const user = await this._authService.verifyToken(token);
+
+    return await this._authService.changePassword(
+      {
+        password: req.body.password,
+        newPassword: req.body.newPassword,
+      },
+      user.id,
+    );
+  }
 
   @UseGuards(JwtAuthGuard, SessionGuard)
   @Post('logout')
