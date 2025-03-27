@@ -11,7 +11,6 @@ import {
   UseGuards,
   Get,
   Request,
-  Headers,
   UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -60,20 +59,17 @@ export class UserController {
   @Post('become-member')
   async becomeMember(
     @Request() updateUserToMemberDTO: CreateMemberDto,
-    @Headers('authorization') authorizationHeader: string,
+    @Request() req,
   ) {
     try {
-      const token = authorizationHeader.replace('Bearer ', '');
-      const user = await this._authService.verifyToken(token);
-
-      if (!user) {
+      if (!req.user) {
         throw new UnauthorizedException(
           'You are not authorized to become a member.',
         );
       }
       await this._userService.becomeAmember(updateUserToMemberDTO, {
-        id: user.id,
-        role: user.role[0],
+        id: req.user.id,
+        role: req.user.role[0],
       });
     } catch (error) {
       throw new UnauthorizedException(`${error.message}`);

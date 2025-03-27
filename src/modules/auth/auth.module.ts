@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { forwardRef, Global, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
@@ -19,6 +19,7 @@ import { SessionSerializer } from './serializer/session.serializer';
 import { UserModule } from '@modules/user/user.module';
 
 config();
+@Global()
 @Module({
   imports: [
     JwtModule.register({

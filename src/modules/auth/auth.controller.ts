@@ -51,19 +51,13 @@ export class AuthController {
   }
 
   @Post('change-password')
-  async changePassword(
-    @Request() req,
-    @Headers('authorization') authorizationHeader: string,
-  ) {
-    const token = authorizationHeader.replace('Bearer ', '');
-    const user = await this._authService.verifyToken(token);
-
+  async changePassword(@Request() req) {
     return await this._authService.changePassword(
       {
         password: req.body.password,
         newPassword: req.body.newPassword,
       },
-      user.id,
+      req.user.id,
     );
   }
 

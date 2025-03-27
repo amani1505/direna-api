@@ -70,9 +70,11 @@ export class AuthService implements OnModuleInit {
         name: user.username,
       },
     };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...userData } = user;
 
     return {
-      ...user,
+      user: userData,
       accessToken: this._jwtService.sign(payload),
       refreshToken: this._jwtService.sign(payload, { expiresIn: '7d' }),
     };
