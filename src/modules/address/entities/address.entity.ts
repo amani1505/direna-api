@@ -19,10 +19,13 @@ export class Address {
   @Column()
   city: string;
 
-  @Column()
+  @Column({ nullable: true })
   state: string;
 
   @Column()
+  district: string;
+
+  @Column({ nullable: true })
   zip_code: string;
 
   @Column()
@@ -38,8 +41,8 @@ export class Address {
   user: User;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }

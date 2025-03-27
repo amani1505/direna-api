@@ -27,7 +27,6 @@ export class AddressController {
 
   @Get()
   findAll(@Request() req) {
-    console.log(req.user);
     return this._addressService.findAll(req.user.id);
   }
 

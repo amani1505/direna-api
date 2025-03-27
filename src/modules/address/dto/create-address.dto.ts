@@ -1,4 +1,4 @@
-import { IsBoolean, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class CreateAddressDto {
   @IsString()
@@ -7,11 +7,16 @@ export class CreateAddressDto {
   @IsString()
   city: string;
 
+  @IsOptional()
   @IsString()
   state: string;
 
+  @IsOptional()
   @IsString()
   zip_code: string;
+
+  @IsString()
+  district: string;
 
   @IsString()
   country: string;

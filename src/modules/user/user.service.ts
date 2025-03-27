@@ -291,6 +291,7 @@ export class UserService {
     if (updateUserDto.middle_name) {
       user.middle_name = updateUserDto.middle_name;
     }
+
     if (updateUserDto.last_name) {
       user.last_name = updateUserDto.last_name;
     }
