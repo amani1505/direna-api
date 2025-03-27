@@ -19,7 +19,7 @@ export class CreateUserDto {
   phone_number: string;
 
   @IsEnum(GenderEnum)
-  gender: string;
+  gender: GenderEnum;
 
   @IsString()
   password?: string;

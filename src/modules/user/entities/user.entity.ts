@@ -44,8 +44,8 @@ export class User {
   @Column()
   phone_number: string;
 
-  @Column({ enum: GenderEnum })
-  gender: string;
+  @Column({ type: 'enum', enum: GenderEnum })
+  gender: GenderEnum;
 
   @Column()
   @Exclude()

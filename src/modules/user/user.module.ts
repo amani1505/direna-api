@@ -10,14 +10,30 @@ import { Staff } from '@modules/staffs/entities/staff.entity';
 import { Blog } from '@modules/blog/entities/blog.entity';
 import { UserSeeder } from '@seeder/user.seeder';
 import { Role } from '@modules/roles/entities/role.entity';
+import { Address } from '@modules/address/entities/address.entity';
+import { Branch } from '@modules/branches/entities/branch.entity';
+import { Service } from '@modules/services/entities/service.entity';
+import { AuthModule } from '@modules/auth/auth.module';
+import { GenerateUniqueNumberUtil } from '@utils/generate-unique-number.util';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Files, Member, Staff, Blog, Role]),
+    TypeOrmModule.forFeature([
+      User,
+      Files,
+      Member,
+      Staff,
+      Blog,
+      Role,
+      Address,
+      Branch,
+      Service,
+    ]),
     MailModule,
+    AuthModule,
   ],
   controllers: [UserController],
-  providers: [UserService, UserSeeder],
+  providers: [UserService, UserSeeder, GenerateUniqueNumberUtil],
   exports: [UserService, UserSeeder],
 })
 export class UserModule {}

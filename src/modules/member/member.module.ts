@@ -1,7 +1,6 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { MemberController } from './member.controller';
-import { UserService } from '@modules/user/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Member } from './entities/member.entity';
 import { User } from '@modules/user/entities/user.entity';
@@ -12,6 +11,7 @@ import { Files } from '@modules/file/entities/file.entity';
 import { Role } from '@modules/roles/entities/role.entity';
 import { Staff } from '@modules/staffs/entities/staff.entity';
 import { UtilsModule } from '@utils/utils.module';
+import { UserModule } from '@modules/user/user.module';
 
 @Module({
   imports: [
@@ -26,8 +26,10 @@ import { UtilsModule } from '@utils/utils.module';
     ]),
     MailModule,
     UtilsModule,
+    forwardRef(() => UserModule),
   ],
   controllers: [MemberController],
-  providers: [MemberService, UserService],
+  providers: [MemberService],
+  exports: [MemberService],
 })
 export class MemberModule {}

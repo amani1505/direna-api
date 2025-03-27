@@ -36,6 +36,7 @@ export class MemberService {
     private _roleRepository: Repository<Role>,
 
     private _userService: UserService,
+
     private readonly _generateUniqueNumberUtil: GenerateUniqueNumberUtil,
   ) {}
 

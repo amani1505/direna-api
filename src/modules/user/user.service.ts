@@ -8,16 +8,19 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { MailService } from '@modules/mail/mail.service';
 import { readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { Member } from '@modules/member/entities/member.entity';
 import { Staff } from '@modules/staffs/entities/staff.entity';
-import { MemberService } from '@modules/member/member.service';
+
 import { Role } from '@modules/roles/entities/role.entity';
 import { CreateMemberDto } from '@modules/member/dto/create-member.dto';
+import { Branch } from '@modules/branches/entities/branch.entity';
+import { Service } from '@modules/services/entities/service.entity';
+import { GenerateUniqueNumberUtil } from '@utils/generate-unique-number.util';
 
 @Injectable()
 export class UserService {
@@ -30,14 +33,21 @@ export class UserService {
     @InjectRepository(Staff)
     private _staffRepository: Repository<Staff>,
 
-    private _mailService: MailService,
-    private _memberService: MemberService,
+    @InjectRepository(Branch)
+    private _branchRepository: Repository<Branch>,
+
+    @InjectRepository(Service)
+    private _serviceRepository: Repository<Service>,
 
     @InjectRepository(Role)
     private _roleRepository: Repository<Role>,
+
+    private _mailService: MailService,
+
+    private readonly _generateUniqueNumberUtil: GenerateUniqueNumberUtil,
   ) {}
 
-  private generateRandomPassword(length: number = 12): string {
+  generateRandomPassword(length: number = 12): string {
     const password = randomBytes(length / 2).toString('hex');
     return password;
   }
@@ -120,13 +130,23 @@ export class UserService {
   async becomeAmember(
     updateUserToMemberDTO: CreateMemberDto,
     userData: { id: string; role: string },
-  ) {
+  ): Promise<Member> {
     try {
       const user = await this._userRepository.findOne({
         where: { id: userData.id },
       });
       const existingRole = await this._roleRepository.findOne({
         where: { name: userData.role },
+      });
+
+      const { serviceIds, branchId, ...memberData } = updateUserToMemberDTO;
+
+      const member = await this._memberRepository.findOne({
+        where: { email: updateUserToMemberDTO.email },
+      });
+
+      const branch = await this._branchRepository.findOne({
+        where: { id: branchId },
       });
 
       const newRole = await this._roleRepository.findOne({
@@ -136,27 +156,47 @@ export class UserService {
       if (!user) {
         throw new NotFoundException('User not found');
       }
+      if (member) {
+        throw new HttpException('User already a member', HttpStatus.CONFLICT);
+      }
+
+      if (!branch) {
+        throw new NotFoundException(`branch not found`);
+      }
 
       if (!existingRole) {
         throw new NotFoundException('The Old Role not Exist  not found');
       }
 
-      const createdMember = this._memberService.becomeAMember({
-        first_name: updateUserToMemberDTO.first_name,
-        middle_name: updateUserToMemberDTO.middle_name,
-        last_name: updateUserToMemberDTO.last_name,
-        email: updateUserToMemberDTO.email,
-        phone: updateUserToMemberDTO.phone,
-        gender: updateUserToMemberDTO.gender,
-        branchId: updateUserToMemberDTO.branchId,
-        serviceIds: updateUserToMemberDTO.serviceIds,
+      const services = await this._serviceRepository.find({
+        where: {
+          id: In(serviceIds), // Import In from typeorm
+        },
+      });
+
+      if (services.length !== serviceIds.length) {
+        throw new NotFoundException(`One or more services not found`);
+      }
+
+      const memberNumber =
+        await this._generateUniqueNumberUtil.generateUniqueNumber(
+          'DIRENA-MEM',
+          this._memberRepository,
+          'member_number',
+        );
+
+      const createdMember = this._memberRepository.create({
+        ...memberData,
+        member_number: memberNumber,
+        branch,
+        services,
       });
 
       this._userRepository.create({
         roleId: newRole.id,
       });
 
-      return createdMember;
+      return await this._memberRepository.save(createdMember);
     } catch (error) {
       throw new HttpException(
         `Failed to create!:${error.message}`,
