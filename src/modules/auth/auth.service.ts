@@ -37,7 +37,7 @@ export class AuthService implements OnModuleInit {
       const user = await this._userService.findOneByUsername(username);
       if (!user) {
         throw new BadRequestException(
-          'Invalid credentials::Please Enter valid credentials',
+          'Invalid credentials:: Please Enter valid credentials',
         );
       }
 
@@ -45,7 +45,7 @@ export class AuthService implements OnModuleInit {
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (user && !isPasswordValid) {
         throw new BadRequestException(
-          'Invalid credentials::Please Enter valid credentials',
+          'Invalid credentials:: Please Enter valid credentials',
         );
       }
 
@@ -54,9 +54,7 @@ export class AuthService implements OnModuleInit {
       if (error instanceof BadRequestException) {
         throw error; // Re-throw known errors
       }
-      throw new InternalServerErrorException(
-        `An error occurred while validating the user: ${error.message}`,
-      );
+      throw new InternalServerErrorException(` ${error.message}`);
     }
   }
 
@@ -79,6 +77,7 @@ export class AuthService implements OnModuleInit {
       refreshToken: this._jwtService.sign(payload, { expiresIn: '7d' }),
     };
   }
+
   async changePassword(
     passwords: { password: string; newPassword: string },
     userId: string,

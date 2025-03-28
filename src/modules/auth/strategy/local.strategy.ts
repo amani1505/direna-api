@@ -19,7 +19,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       return user;
     } catch (error) {
       // Always throw "Invalid credentials" for any error
-      throw new BadRequestException(`Invalid credentials: ${error.message}`);
+      throw new BadRequestException(` ${error.message}`);
     }
   }
 }

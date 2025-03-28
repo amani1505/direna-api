@@ -258,7 +258,7 @@ export class UserService {
       }
     }
 
-    if (updateUserDto.email) {
+    if (updateUserDto.email && updateUserDto.email !== user.email) {
       const existingEmail = await this._userRepository.findOne({
         where: { email: updateUserDto.email },
       });
