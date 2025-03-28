@@ -99,11 +99,10 @@ export class AuthService implements OnModuleInit {
         throw new BadRequestException('Invalid password');
       }
 
-      // Step 3: Hash the new password
-      const hashedPassword = await bcrypt.hash(passwords.newPassword, 10);
-
       // Step 4: Update the user's password
-      await this._userService.update(user.id, { password: hashedPassword });
+      await this._userService.update(user.id, {
+        password: passwords.newPassword,
+      });
 
       return {
         message: 'Password updated successfully',

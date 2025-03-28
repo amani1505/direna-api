@@ -50,6 +50,7 @@ export class AuthController {
     return await this._authService.forgetPassword(req.body.email);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('change-password')
   async changePassword(@Request() req) {
     return await this._authService.changePassword(

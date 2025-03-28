@@ -258,7 +258,7 @@ export class UserService {
       }
     }
 
-    if (updateUserDto.email !== user.email) {
+    if (updateUserDto.email) {
       const existingEmail = await this._userRepository.findOne({
         where: { email: updateUserDto.email },
       });
@@ -282,7 +282,7 @@ export class UserService {
     }
 
     if (updateUserDto.password) {
-      user.password = await bcrypt.hash(updateUserDto.username, 10);
+      user.password = await bcrypt.hash(updateUserDto.password, 10);
     }
 
     if (updateUserDto.first_name) {
