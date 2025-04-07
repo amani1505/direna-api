@@ -12,13 +12,14 @@ import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderStatus } from './entities/order.entity';
 import { JwtAuthGuard } from '@modules/auth/guard/jwt-auth.guard';
+import { SessionGuard } from '@modules/auth/guard/session.guard';
 // import { UpdateOrderDto } from './dto/update-order.dto';
 
 @Controller('order')
 export class OrderController {
   constructor(private readonly _ordersService: OrderService) {}
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, SessionGuard)
   @Post('cart/:cartId')
   async createOrder(
     @Request() req,
@@ -28,7 +29,7 @@ export class OrderController {
     return this._ordersService.createOrder(req.user, cartId, createOrderDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, SessionGuard)
   @Get()
   async getUserOrders(@Request() req) {
     return this._ordersService.getUserOrders(req.user.id);

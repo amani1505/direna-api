@@ -13,6 +13,7 @@ import { Equipment } from '@modules/equipment/entities/equipment.entity';
 import { CartService } from '@modules/cart/cart.service';
 import { User } from '@modules/user/entities/user.entity';
 import { Cart } from '@modules/cart/entities/cart.entity';
+import { GenerateUniqueNumberUtil } from '@utils/generate-unique-number.util';
 
 @Injectable()
 export class OrderService {
@@ -23,6 +24,8 @@ export class OrderService {
     private _orderItemRepository: Repository<OrderItem>,
     private _cartService: CartService,
     private _connection: Connection,
+
+    private readonly _generateUniqueNumberUtil: GenerateUniqueNumberUtil,
   ) {}
 
   async createOrder(
@@ -37,15 +40,22 @@ export class OrderService {
     try {
       const cart = await this._connection.getRepository(Cart).findOne({
         where: { id: cartId },
-        relations: ['items', 'items.product'],
+        relations: ['items', 'items.equipment'],
       });
       if (!cart || cart.items.length === 0) {
         throw new BadRequestException('Cart is empty');
       }
 
+      const orderNumber =
+        await this._generateUniqueNumberUtil.generateUniqueNumber(
+          'DIRENA-ORD',
+          this._orderRepository,
+          'order_number',
+        );
       const order = this._orderRepository.create({
         user,
         ...createOrderDto,
+        order_number: orderNumber,
         status: OrderStatus.PENDING,
         total_amount: 0,
       });
@@ -83,6 +93,7 @@ export class OrderService {
       }
 
       await queryRunner.manager.save(orderItems);
+
       savedOrder.total_amount = totalAmount;
       await queryRunner.manager.save(savedOrder);
       await this._cartService.clearCart(cartId);

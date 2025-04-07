@@ -35,6 +35,9 @@ import { TokenBlacklistMiddleware } from '@modules/auth/middleware/token-blackli
 import { CartModule } from './modules/cart/cart.module';
 import { OrderModule } from './modules/order/order.module';
 import { AddressModule } from './modules/address/address.module';
+import { PackagesModule } from './modules/packages/packages.module';
+import { TimetableModule } from './modules/timetable/timetable.module';
+import { WishlistModule } from './modules/wishlist/wishlist.module';
 
 @Module({
   imports: [
@@ -63,6 +66,9 @@ import { AddressModule } from './modules/address/address.module';
     CartModule,
     OrderModule,
     AddressModule,
+    PackagesModule,
+    TimetableModule,
+    WishlistModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,8 +2,10 @@ import { GenderEnum } from '@enum/gender.enum';
 import { Address } from '@modules/address/entities/address.entity';
 import { Blog } from '@modules/blog/entities/blog.entity';
 import { Member } from '@modules/member/entities/member.entity';
+import { Order } from '@modules/order/entities/order.entity';
 import { Role } from '@modules/roles/entities/role.entity';
 import { Staff } from '@modules/staffs/entities/staff.entity';
+import { Wishlist } from '@modules/wishlist/entities/wishlist.entity';
 import { Exclude } from 'class-transformer';
 
 import {
@@ -66,6 +68,11 @@ export class User {
   })
   addresses: Address[];
 
+  @OneToMany(() => Order, (order) => order.user, {
+    cascade: true,
+  })
+  orders: Order[];
+
   @OneToOne(() => Member, (member) => member.user) // One-to-One with Member
   @JoinColumn({ name: 'memberId' })
   member: Member;
@@ -81,6 +88,9 @@ export class User {
   @Column({ nullable: true })
   @Exclude()
   staffId: string;
+
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.user)
+  wishlists: Wishlist[];
 
   @CreateDateColumn()
   created_at: Date;

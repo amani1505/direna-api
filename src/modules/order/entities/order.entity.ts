@@ -24,6 +24,9 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column()
+  order_number: string;
+
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
   user: User;
@@ -38,10 +41,10 @@ export class Order {
   })
   status: OrderStatus;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   shipping_address: string;
 
-  @Column()
+  @Column({ nullable: true })
   payment_method: string;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { cascade: true })

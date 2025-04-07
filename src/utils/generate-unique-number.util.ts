@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Member } from '@modules/member/entities/member.entity';
 import { Staff } from '@modules/staffs/entities/staff.entity';
+import { Order } from '@modules/order/entities/order.entity';
 
 @Injectable()
 export class GenerateUniqueNumberUtil {
@@ -14,7 +15,7 @@ export class GenerateUniqueNumberUtil {
    */
   async generateUniqueNumber(
     prefix: string,
-    repository: Repository<Member | Staff>,
+    repository: Repository<Member | Staff | Order>,
     field: string,
   ): Promise<string> {
     let isUnique = false;

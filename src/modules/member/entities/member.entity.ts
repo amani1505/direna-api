@@ -1,5 +1,6 @@
 import { GenderEnum } from '@enum/gender.enum';
 import { Branch } from '@modules/branches/entities/branch.entity';
+import { Package } from '@modules/packages/entities/package.entity';
 import { Service } from '@modules/services/entities/service.entity';
 import { User } from '@modules/user/entities/user.entity';
 import {
@@ -66,6 +67,10 @@ export class Member {
 
   @OneToOne(() => User, (user) => user.member) // Bidirectional relationship
   user: User;
+
+  @ManyToMany(() => Package, (memberPackage) => memberPackage.members)
+  @JoinTable({ name: 'gym_packages' })
+  packages: Package[];
 
   @CreateDateColumn()
   created_at: Date;

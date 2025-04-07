@@ -8,7 +8,7 @@ import { CreateClassDto } from './dto/create-class.dto';
 import { UpdateClassDto } from './dto/update-class.dto';
 import { Classes } from './entities/class.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { getMetadataArgsStorage, In, Repository } from 'typeorm';
+import { getMetadataArgsStorage, Repository } from 'typeorm';
 import { Staff } from '@modules/staffs/entities/staff.entity';
 import { PaginationOptions } from '@interface/pagination-option.interface';
 import { PaginationInterface } from '@interface/pagination.interface';
@@ -25,17 +25,8 @@ export class ClassesService {
   ) {}
   async create(createClassDto: CreateClassDto): Promise<Classes> {
     try {
-      const { staffIds, ...classData } = createClassDto;
-
-      const trainers = await this._staffRepository.find({
-        where: { id: In(staffIds) },
-      });
-      if (trainers.length !== staffIds.length) {
-        throw new NotFoundException(`One or more trainer not found`);
-      }
       const createdClass = this._classesRepository.create({
-        ...classData,
-        instructors: trainers,
+        ...createClassDto,
       });
 
       const classCreated = await this._classesRepository.save(createdClass);
@@ -122,7 +113,6 @@ export class ClassesService {
 
   async update(id: string, updateClassDto: UpdateClassDto): Promise<Classes> {
     try {
-      let instructors: Staff[] = [];
       const session = await this._classesRepository.findOne({
         where: { id },
       });
@@ -130,18 +120,6 @@ export class ClassesService {
       if (!session) {
         throw new NotFoundException(`class not found`);
       }
-
-      if (updateClassDto.staffIds && updateClassDto.staffIds.length > 0) {
-        instructors = await this._staffRepository.find({
-          where: { id: In(updateClassDto.staffIds) },
-        });
-
-        if (instructors.length !== updateClassDto.staffIds.length) {
-          throw new NotFoundException(`One or more trainer not found`);
-        }
-      }
-
-      session.instructors = instructors;
 
       this._classesRepository.merge(session, updateClassDto);
 

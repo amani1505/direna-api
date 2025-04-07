@@ -407,7 +407,16 @@ export class UserService {
     // Fetch the user without loading relationships initially
     const user = await this._userRepository.findOne({
       where: { id: userId },
-      relations: ['role'], // Always load the role
+      relations: [
+        'role',
+        // 'orders',
+        // 'orders.items',
+        // 'orders.items.equipment',
+        // 'orders.items.equipment.files',
+        // 'wishlists',
+        // 'wishlists.equipment',
+        // 'wishlists.equipment.files',
+      ], // Always load the role
     });
 
     if (!user) {

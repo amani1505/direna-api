@@ -6,11 +6,13 @@ import { Equipment } from '@modules/equipment/entities/equipment.entity';
 import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/order-item.entity';
 import { CartModule } from '@modules/cart/cart.module';
+import { UtilsModule } from '@utils/utils.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Order, OrderItem, Equipment]),
     CartModule,
+    UtilsModule,
   ],
   controllers: [OrderController],
   providers: [OrderService],
