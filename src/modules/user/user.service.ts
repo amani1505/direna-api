@@ -423,6 +423,19 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
 
+    const ordersCount = await this._userRepository
+      .createQueryBuilder('user')
+      .leftJoin('user.orders', 'orders')
+      .where('user.id = :userId', { userId })
+      .getCount();
+
+    // Get wishlist count
+    const wishlistCount = await this._userRepository
+      .createQueryBuilder('user')
+      .leftJoin('user.wishlists', 'wishlists')
+      .where('user.id = :userId', { userId })
+      .getCount();
+
     // Check if the user is a member or staff and load the relevant relationship
     if (user.memberId) {
       // Load the member relationship if the user is a member
@@ -441,6 +454,8 @@ export class UserService {
       return {
         profile: userData, // Spread user data without staffId and staff
         member, // Include the member details
+        ordersCount,
+        wishlistCount,
       };
     } else if (user.staffId) {
       // Load the staff relationship if the user is a staff
@@ -459,6 +474,8 @@ export class UserService {
       return {
         profile: userData, // Spread user data without memberId and member
         staff, // Include the staff details
+        ordersCount,
+        wishlistCount,
       };
     } else {
       // If the user is neither a member nor a staff, return the user without relationships
@@ -481,6 +498,8 @@ export class UserService {
 
       return {
         profile: userData,
+        ordersCount,
+        wishlistCount,
       };
     }
   }
