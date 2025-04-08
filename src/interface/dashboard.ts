@@ -8,6 +8,7 @@ export interface CountData {
   title: string;
   subtitle: string;
   count: number;
+  icon: string;
   link: string;
 }
 
