@@ -38,6 +38,7 @@ import { AddressModule } from './modules/address/address.module';
 import { PackagesModule } from './modules/packages/packages.module';
 import { TimetableModule } from './modules/timetable/timetable.module';
 import { WishlistModule } from './modules/wishlist/wishlist.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { WishlistModule } from './modules/wishlist/wishlist.module';
     PackagesModule,
     TimetableModule,
     WishlistModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
