@@ -21,6 +21,10 @@ import { CreateMemberDto } from '@modules/member/dto/create-member.dto';
 import { Branch } from '@modules/branches/entities/branch.entity';
 import { Service } from '@modules/services/entities/service.entity';
 import { GenerateUniqueNumberUtil } from '@utils/generate-unique-number.util';
+import { Cart } from '@modules/cart/entities/cart.entity';
+
+import { Order } from '@modules/order/entities/order.entity';
+import { Wishlist } from '@modules/wishlist/entities/wishlist.entity';
 
 @Injectable()
 export class UserService {
@@ -41,6 +45,13 @@ export class UserService {
 
     @InjectRepository(Role)
     private _roleRepository: Repository<Role>,
+
+    @InjectRepository(Cart)
+    private _cartRepository: Repository<Cart>,
+    @InjectRepository(Order)
+    private _orderRepository: Repository<Order>,
+    @InjectRepository(Wishlist)
+    private _wishlistRepository: Repository<Wishlist>,
 
     private _mailService: MailService,
 
@@ -404,41 +415,43 @@ export class UserService {
   }
 
   async getProfile(userId: string): Promise<any> {
-    // Fetch the user without loading relationships initially
+    // Fetch the user with role
     const user = await this._userRepository.findOne({
       where: { id: userId },
-      relations: [
-        'role',
-        // 'orders',
-        // 'orders.items',
-        // 'orders.items.equipment',
-        // 'orders.items.equipment.files',
-        // 'wishlists',
-        // 'wishlists.equipment',
-        // 'wishlists.equipment.files',
-      ], // Always load the role
+      relations: ['role'],
     });
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    const ordersCount = await this._userRepository
-      .createQueryBuilder('user')
-      .leftJoin('user.orders', 'orders')
-      .where('user.id = :userId', { userId })
-      .getCount();
+    // Get orders count
+    const ordersCount = await this._orderRepository.count({
+      where: { user: { id: userId } },
+    });
 
     // Get wishlist count
-    const wishlistCount = await this._userRepository
-      .createQueryBuilder('user')
-      .leftJoin('user.wishlists', 'wishlists')
-      .where('user.id = :userId', { userId })
-      .getCount();
+    const wishlistCount = await this._wishlistRepository.count({
+      where: { user: { id: userId } },
+    });
 
-    // Check if the user is a member or staff and load the relevant relationship
+    // Get cart items count
+    const cart = await this._cartRepository.findOne({
+      where: { user: { id: userId } },
+      relations: ['items'],
+    });
+    const cartItemsCount = cart?.items?.length || 0;
+
+    // Get the first 5 latest orders
+    const orderHistory = await this._orderRepository.find({
+      where: { user: { id: userId } },
+      relations: ['items'],
+      order: { created_at: 'DESC' },
+      take: 5,
+    });
+
+    // Check if the user is a member or staff
     if (user.memberId) {
-      // Load the member relationship if the user is a member
       const member = await this._memberRepository.findOne({
         where: { id: user.memberId },
       });
@@ -447,18 +460,18 @@ export class UserService {
         throw new NotFoundException('Member not found');
       }
 
-      // Exclude staffId and staff from the response
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { staffId, staff, roleId, password, ...userData } = user;
 
       return {
-        profile: userData, // Spread user data without staffId and staff
-        member, // Include the member details
+        profile: userData,
+        member,
         ordersCount,
         wishlistCount,
+        cartItemsCount,
+        orderHistory,
       };
     } else if (user.staffId) {
-      // Load the staff relationship if the user is a staff
       const staff = await this._staffRepository.findOne({
         where: { id: user.staffId },
       });
@@ -467,19 +480,18 @@ export class UserService {
         throw new NotFoundException('Staff not found');
       }
 
-      // Exclude memberId and member from the response
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { memberId, roleId, password, member, ...userData } = user;
 
       return {
-        profile: userData, // Spread user data without memberId and member
-        staff, // Include the staff details
+        profile: userData,
+        staff,
         ordersCount,
         wishlistCount,
+        cartItemsCount,
+        orderHistory,
       };
     } else {
-      // If the user is neither a member nor a staff, return the user without relationships
-
       const {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         memberId,
@@ -500,6 +512,8 @@ export class UserService {
         profile: userData,
         ordersCount,
         wishlistCount,
+        cartItemsCount,
+        orderHistory,
       };
     }
   }

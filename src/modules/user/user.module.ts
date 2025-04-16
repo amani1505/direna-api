@@ -15,6 +15,9 @@ import { Branch } from '@modules/branches/entities/branch.entity';
 import { Service } from '@modules/services/entities/service.entity';
 import { AuthModule } from '@modules/auth/auth.module';
 import { GenerateUniqueNumberUtil } from '@utils/generate-unique-number.util';
+import { Cart } from '@modules/cart/entities/cart.entity';
+import { Wishlist } from '@modules/wishlist/entities/wishlist.entity';
+import { Order } from '@modules/order/entities/order.entity';
 
 @Module({
   imports: [
@@ -28,6 +31,9 @@ import { GenerateUniqueNumberUtil } from '@utils/generate-unique-number.util';
       Address,
       Branch,
       Service,
+      Cart,
+      Wishlist,
+      Order,
     ]),
     MailModule,
     AuthModule,

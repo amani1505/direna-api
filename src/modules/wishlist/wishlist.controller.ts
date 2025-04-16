@@ -32,7 +32,7 @@ export class WishlistController {
   }
 
   @UseGuards(JwtAuthGuard, SessionGuard)
-  @Get()
+  @Get('mine')
   findAllMyWishlist(@Request() req) {
     return this._wishlistService.findAllMyWishlist(req.user.id);
   }

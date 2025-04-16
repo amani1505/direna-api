@@ -117,7 +117,7 @@ export class OrderService {
     try {
       return this._orderRepository.find({
         where: { user: { id: userId } },
-        relations: ['items', 'items.product'],
+        relations: ['items', 'items.equipment', 'items.equipment.files'],
         order: { created_at: 'DESC' },
       });
     } catch (error) {
@@ -155,6 +155,18 @@ export class OrderService {
       throw new InternalServerErrorException(
         `Error updating order status: ${error}`,
       );
+    }
+  }
+
+  async deleteOrder(orderId: string): Promise<void> {
+    try {
+      const order = await this._orderRepository.findOne({
+        where: { id: orderId },
+      });
+      if (!order) throw new NotFoundException('Order not found');
+      await this._orderRepository.remove(order);
+    } catch (error) {
+      throw new InternalServerErrorException(`Error deleting order: ${error}`);
     }
   }
 }

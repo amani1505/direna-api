@@ -64,6 +64,7 @@ export class DashboardService {
       }),
       this._equipmentRepository.find({
         order: { created_at: 'DESC' },
+        relations: ['files'],
         take: 5,
       }),
     ]);

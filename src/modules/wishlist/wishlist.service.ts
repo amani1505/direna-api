@@ -52,7 +52,9 @@ export class WishlistService {
       wishlist.equipment = equipment;
       wishlist.user = user;
 
-      return this._wishlistRepository.create(wishlist);
+      const createdWishlist = this._wishlistRepository.create(wishlist);
+
+      return await this._wishlistRepository.save(createdWishlist);
     } catch (error) {
       if (
         error instanceof NotFoundException ||
@@ -78,10 +80,10 @@ export class WishlistService {
     }
   }
 
-  async findAllMyWishlist(uderId: string): Promise<Wishlist[]> {
+  async findAllMyWishlist(userId: string): Promise<Wishlist[]> {
     try {
       return await this._wishlistRepository.find({
-        where: { user: { id: uderId } },
+        where: { user: { id: userId } },
         relations: ['equipment', 'equipment.files', 'user'],
       });
     } catch (error) {

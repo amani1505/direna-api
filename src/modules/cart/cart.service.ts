@@ -89,7 +89,7 @@ export class CartService {
       });
     } catch (error) {
       throw new InternalServerErrorException(
-        `Error adding item to cart: ${error}`,
+        `Error adding item to cart: ${error.message}`,
       );
     }
   }

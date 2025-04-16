@@ -7,6 +7,7 @@ import {
   Param,
   Request,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -48,5 +49,11 @@ export class OrderController {
     @Body('status') status: OrderStatus,
   ) {
     return this._ordersService.updateOrderStatus(id, status);
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async deleteOrder(@Param('id') id: string) {
+    return this._ordersService.deleteOrder(id);
   }
 }
